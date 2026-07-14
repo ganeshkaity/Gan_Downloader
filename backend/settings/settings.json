@@ -1,0 +1,16 @@
+{
+  "downloadFolder": "d:\\my workspace\\Personal_Tools\\Gan_Downloader\\downloads",
+  "defaultVideoQuality": "bestvideo+bestaudio/best",
+  "defaultAudioQuality": "bestaudio/best",
+  "theme": "dark",
+  "concurrentDownloads": 3,
+  "maxQueueSize": 50,
+  "autoRetry": true,
+  "retryCount": 3,
+  "duplicateHandling": "ask",
+  "defaultOutputTemplate": "%(title)s.%(ext)s",
+  "subtitlePreferences": "en",
+  "ffmpegPath": "ffmpeg",
+  "ytdlpPath": "yt-dlp",
+  "autoUpdateYtdlp": false
+}
