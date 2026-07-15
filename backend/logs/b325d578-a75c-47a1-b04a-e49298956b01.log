@@ -1,0 +1,22 @@
+2026-07-14T22:53:41.507Z [STDERR] WARNING: ffmpeg-location ffmpeg does not exist! Continuing without ffmpeg
+2026-07-14T22:53:41.687Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=q8gilwzNQEA
+2026-07-14T22:53:41.688Z [STDOUT] [youtube] q8gilwzNQEA: Downloading webpage
+2026-07-14T22:53:46.545Z [STDERR] WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+2026-07-14T22:53:46.559Z [STDOUT] [youtube] q8gilwzNQEA: Downloading android vr player API JSON
+2026-07-14T22:53:48.562Z [STDOUT] [info] q8gilwzNQEA: Downloading 1 format(s): 251
+2026-07-14T22:53:48.627Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-14T22:53:48.926Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Mere Rashke Qamar Song With Lyrics  Baadshaho  Ajay Devgn, Ileana, Nusrat & Rahat Fateh Ali Khan.webm
+2026-07-14T22:53:48.927Z [STDOUT] [download]   0.0% of    3.96MiB at   50.46KiB/s ETA 01:20
+2026-07-14T22:53:48.928Z [STDOUT] [download]   0.1% of    3.96MiB at  141.89KiB/s ETA 00:28
+2026-07-14T22:53:48.929Z [STDOUT] [download]   0.2% of    3.96MiB at  314.34KiB/s ETA 00:12
+2026-07-14T22:53:48.937Z [STDOUT] [download]   0.4% of    3.96MiB at  663.56KiB/s ETA 00:07
+2026-07-14T22:53:48.940Z [STDOUT] [download]   0.8% of    3.96MiB at  994.20KiB/s ETA 00:04
+2026-07-14T22:53:48.955Z [STDOUT] [download]   1.6% of    3.96MiB at    1.28MiB/s ETA 00:03
+2026-07-14T22:53:48.994Z [STDOUT] [download]   3.1% of    3.96MiB at    1.42MiB/s ETA 00:02
+2026-07-14T22:53:49.047Z [STDOUT] [download]   6.3% of    3.96MiB at    1.78MiB/s ETA 00:02
+2026-07-14T22:53:49.121Z [STDOUT] [download]  12.6% of    3.96MiB at    2.33MiB/s ETA 00:01
+2026-07-14T22:53:49.224Z [STDOUT] [download]  25.3% of    3.96MiB at    3.15MiB/s ETA 00:00
+2026-07-14T22:53:49.490Z [STDOUT] [download]  50.5% of    3.96MiB at    3.44MiB/s ETA 00:00
+2026-07-14T22:53:50.159Z [STDOUT] [download] 100.0% of    3.96MiB at    3.16MiB/s ETA 00:00
+2026-07-14T22:53:50.170Z [STDOUT] [download] 100% of    3.96MiB in 00:00:01 at 2.69MiB/s
+2026-07-14T22:53:50.223Z [STDERR] ERROR: Postprocessing: ffprobe and ffmpeg not found. Please install or provide the path using --ffmpeg-location

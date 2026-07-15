@@ -1,0 +1,22 @@
+2026-07-14T22:53:55.089Z [STDERR] WARNING: ffmpeg-location ffmpeg does not exist! Continuing without ffmpeg
+2026-07-14T22:53:55.525Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=xWi8nDUjHGA
+2026-07-14T22:53:55.526Z [STDOUT] [youtube] xWi8nDUjHGA: Downloading webpage
+2026-07-14T22:54:00.766Z [STDERR] WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+2026-07-14T22:54:00.776Z [STDOUT] [youtube] xWi8nDUjHGA: Downloading android vr player API JSON
+2026-07-14T22:54:02.244Z [STDOUT] [info] xWi8nDUjHGA: Downloading 1 format(s): 251
+2026-07-14T22:54:02.274Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-14T22:54:02.531Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Yo Yo Honey Singh DIL CHORI (Video) Simar Kaur, Ishers  Hans Raj Hans  Sonu Ke Titu Ki Sweety.webm
+2026-07-14T22:54:02.539Z [STDOUT] [download]   0.0% of    3.52MiB at  133.51KiB/s ETA 00:27
+2026-07-14T22:54:02.541Z [STDOUT] [download]   0.1% of    3.52MiB at  181.55KiB/s ETA 00:19
+2026-07-14T22:54:02.543Z [STDOUT] [download]   0.2% of    3.52MiB at  361.17KiB/s ETA 00:09
+2026-07-14T22:54:02.545Z [STDOUT] [download]   0.4% of    3.52MiB at  733.77KiB/s ETA 00:04
+2026-07-14T22:54:02.546Z [STDOUT] [download]   0.9% of    3.52MiB at    1.44MiB/s ETA 00:02
+2026-07-14T22:54:02.586Z [STDOUT] [download]   1.8% of    3.52MiB at    1.03MiB/s ETA 00:03
+2026-07-14T22:54:02.635Z [STDOUT] [download]   3.5% of    3.52MiB at    1.12MiB/s ETA 00:03
+2026-07-14T22:54:02.685Z [STDOUT] [download]   7.1% of    3.52MiB at    1.58MiB/s ETA 00:02
+2026-07-14T22:54:02.730Z [STDOUT] [download]  14.2% of    3.52MiB at    2.41MiB/s ETA 00:01
+2026-07-14T22:54:02.806Z [STDOUT] [download]  28.4% of    3.52MiB at    3.54MiB/s ETA 00:00
+2026-07-14T22:54:02.911Z [STDOUT] [download]  56.9% of    3.52MiB at    5.15MiB/s ETA 00:00
+2026-07-14T22:54:03.093Z [STDOUT] [download] 100.0% of    3.52MiB at    6.17MiB/s ETA 00:00
+2026-07-14T22:54:03.095Z [STDOUT] [download] 100% of    3.52MiB in 00:00:00 at 4.38MiB/s
+2026-07-14T22:54:03.161Z [STDERR] ERROR: Postprocessing: ffprobe and ffmpeg not found. Please install or provide the path using --ffmpeg-location

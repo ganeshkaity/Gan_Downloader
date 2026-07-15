@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useAppStore } from '@/store';
 import Layout from '@/components/layout';
 import DashboardView from '@/components/dashboard-view';
@@ -14,8 +14,7 @@ import ConsolePanel from '@/components/console-panel';
 import { Terminal, ChevronUp, ChevronDown } from 'lucide-react';
 
 export default function Home() {
-  const { activeView } = useAppStore();
-  const [consoleOpen, setConsoleOpen] = useState(false);
+  const { activeView, consoleOpen, setConsoleOpen } = useAppStore();
 
   const renderActiveView = () => {
     switch (activeView) {

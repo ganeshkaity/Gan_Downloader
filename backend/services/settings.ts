@@ -16,6 +16,8 @@ export interface AppSettings {
   ffmpegPath: string;
   ytdlpPath: string;
   autoUpdateYtdlp: boolean;
+  cookieBrowser: string;
+  cookiesFilePath: string;
 }
 
 const SETTINGS_PATH = path.join(__dirname, '..', 'settings', 'settings.json');
@@ -53,7 +55,9 @@ export class SettingsService {
       subtitlePreferences: 'en',
       ffmpegPath: 'ffmpeg',
       ytdlpPath: 'yt-dlp',
-      autoUpdateYtdlp: false
+      autoUpdateYtdlp: false,
+      cookieBrowser: 'none',
+      cookiesFilePath: ''
     };
 
     return defaults;

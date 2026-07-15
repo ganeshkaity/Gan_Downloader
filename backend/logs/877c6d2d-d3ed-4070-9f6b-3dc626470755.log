@@ -1,0 +1,22 @@
+2026-07-14T22:53:56.528Z [STDERR] WARNING: ffmpeg-location ffmpeg does not exist! Continuing without ffmpeg
+2026-07-14T22:53:56.729Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=bzW9fmwcmG4
+2026-07-14T22:53:56.729Z [STDOUT] [youtube] bzW9fmwcmG4: Downloading webpage
+2026-07-14T22:54:02.742Z [STDERR] WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+2026-07-14T22:54:02.750Z [STDOUT] [youtube] bzW9fmwcmG4: Downloading android vr player API JSON
+2026-07-14T22:54:03.649Z [STDOUT] [info] bzW9fmwcmG4: Downloading 1 format(s): 251
+2026-07-14T22:54:03.668Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-14T22:54:03.890Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Daru Badnaam  Kamal Kahlon & Param Singh  Official Video  Pratik Studio  Latest Punjabi Songs.webm
+2026-07-14T22:54:03.891Z [STDOUT] [download]   0.0% of    3.84MiB at   52.41KiB/s ETA 01:15
+2026-07-14T22:54:03.925Z [STDOUT] [download]   0.1% of    3.84MiB at  151.15KiB/s ETA 00:25
+2026-07-14T22:54:03.927Z [STDOUT] [download]   0.2% of    3.84MiB at  125.52KiB/s ETA 00:31
+2026-07-14T22:54:03.929Z [STDOUT] [download]   0.4% of    3.84MiB at  261.68KiB/s ETA 00:14
+2026-07-14T22:54:03.991Z [STDOUT] [download]   0.8% of    3.84MiB at  341.74KiB/s ETA 00:11
+2026-07-14T22:54:04.029Z [STDOUT] [download]   1.6% of    3.84MiB at  689.26KiB/s ETA 00:05
+2026-07-14T22:54:04.030Z [STDOUT] [download]   3.2% of    3.84MiB at 1002.37KiB/s ETA 00:03
+2026-07-14T22:54:04.135Z [STDOUT] [download]   6.5% of    3.84MiB at    1.42MiB/s ETA 00:02
+2026-07-14T22:54:04.137Z [STDOUT] [download]  13.0% of    3.84MiB at    2.10MiB/s ETA 00:01
+2026-07-14T22:54:04.304Z [STDOUT] [download]  26.0% of    3.84MiB at    2.31MiB/s ETA 00:01
+2026-07-14T22:54:04.411Z [STDOUT] [download]  52.1% of    3.84MiB at    3.70MiB/s ETA 00:00
+2026-07-14T22:54:04.642Z [STDOUT] [download] 100.0% of    3.84MiB at    5.03MiB/s ETA 00:00
+2026-07-14T22:54:04.663Z [STDOUT] [download] 100% of    3.84MiB in 00:00:00 at 3.93MiB/s
+2026-07-14T22:54:04.827Z [STDERR] ERROR: Postprocessing: ffprobe and ffmpeg not found. Please install or provide the path using --ffmpeg-location

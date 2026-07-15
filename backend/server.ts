@@ -122,7 +122,15 @@ route('/playlist', async (req, res) => {
 
   try {
     const settings = SettingsService.getSettings();
-    const args = [url, '--flat-playlist', '--dump-single-json', '--no-warnings', '--ffmpeg-location', settings.ffmpegPath];
+    const args = [url, '--flat-playlist', '--dump-single-json', '--no-warnings', '--js-runtimes', 'node', '--remote-components', 'ejs:github'];
+    if (settings.ffmpegPath && settings.ffmpegPath !== 'ffmpeg') {
+      args.push('--ffmpeg-location', settings.ffmpegPath);
+    }
+    if (settings.cookiesFilePath && settings.cookiesFilePath.trim() !== '') {
+      args.push('--cookies', settings.cookiesFilePath.trim());
+    } else if (settings.cookieBrowser && settings.cookieBrowser !== 'none') {
+      args.push('--cookies-from-browser', settings.cookieBrowser);
+    }
     
     const child = spawn(settings.ytdlpPath, args);
     let stdoutData = '';

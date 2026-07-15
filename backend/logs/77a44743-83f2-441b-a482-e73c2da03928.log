@@ -1,0 +1,25 @@
+2026-07-15T00:25:09.436Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=Fg_9gLeVV2E
+2026-07-15T00:25:09.442Z [STDOUT] [youtube] Fg_9gLeVV2E: Downloading webpage
+2026-07-15T00:25:10.928Z [STDOUT] [youtube] Fg_9gLeVV2E: Downloading tv downgraded player API JSON
+2026-07-15T00:25:11.737Z [STDOUT] [youtube] Fg_9gLeVV2E: Downloading player 9b33d56a-main
+2026-07-15T00:25:12.762Z [STDOUT] [youtube] [jsc:node] Solving JS challenges using node
+2026-07-15T00:25:16.644Z [STDOUT] [youtube] Fg_9gLeVV2E: Downloading m3u8 information
+2026-07-15T00:25:17.740Z [STDOUT] [info] Fg_9gLeVV2E: Downloading 1 format(s): 251
+2026-07-15T00:25:17.773Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-15T00:25:18.127Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Daddy Mummy FULL VIDEO Song  Urvashi Rautela  Kunal Khemu  DSP  Bhaag Johnny  T-Series.webm
+2026-07-15T00:25:18.139Z [STDOUT] [download]   0.0% of    3.92MiB at   74.59KiB/s ETA 00:53
+2026-07-15T00:25:18.140Z [STDOUT] [download]   0.1% of    3.92MiB at  118.33KiB/s ETA 00:33
+2026-07-15T00:25:18.142Z [STDOUT] [download]   0.2% of    3.92MiB at  269.47KiB/s ETA 00:14
+2026-07-15T00:25:18.148Z [STDOUT] [download]   0.4% of    3.92MiB at  563.42KiB/s ETA 00:07
+2026-07-15T00:25:18.169Z [STDOUT] [download]   0.8% of    3.92MiB at  588.94KiB/s ETA 00:06
+2026-07-15T00:25:18.171Z [STDOUT] [download]   1.6% of    3.92MiB at    1.09MiB/s ETA 00:03
+2026-07-15T00:25:18.220Z [STDOUT] [download]   3.2% of    3.92MiB at    1.18MiB/s ETA 00:03
+2026-07-15T00:25:18.270Z [STDOUT] [download]   6.3% of    3.92MiB at    1.61MiB/s ETA 00:02
+2026-07-15T00:25:18.333Z [STDOUT] [download]  12.7% of    3.92MiB at    2.30MiB/s ETA 00:01
+2026-07-15T00:25:18.392Z [STDOUT] [download]  25.5% of    3.92MiB at    3.59MiB/s ETA 00:00
+2026-07-15T00:25:18.554Z [STDOUT] [download]  51.0% of    3.92MiB at    4.54MiB/s ETA 00:00
+2026-07-15T00:25:18.975Z [STDOUT] [download] 100.0% of    3.92MiB at    4.56MiB/s ETA 00:00
+2026-07-15T00:25:18.992Z [STDOUT] [download] 100% of    3.92MiB in 00:00:01 at 3.41MiB/s
+2026-07-15T00:25:19.891Z [STDOUT] [ExtractAudio] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Daddy Mummy FULL VIDEO Song  Urvashi Rautela  Kunal Khemu  DSP  Bhaag Johnny  T-Series.mp3
+2026-07-15T00:25:34.592Z [STDOUT] Deleting original file d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Daddy Mummy FULL VIDEO Song  Urvashi Rautela  Kunal Khemu  DSP  Bhaag Johnny  T-Series.webm (pass -k to keep)
+2026-07-15T00:25:34.605Z [STDOUT] [EmbedSubtitle] Subtitles can only be embedded in mp4, mov, m4a, webm, mkv, mka files

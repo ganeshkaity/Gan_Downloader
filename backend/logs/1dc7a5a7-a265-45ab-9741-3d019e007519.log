@@ -1,0 +1,23 @@
+2026-07-14T23:17:32.103Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=dZ0fwJojhrs
+2026-07-14T23:17:32.105Z [STDOUT] [youtube] dZ0fwJojhrs: Downloading webpage
+2026-07-14T23:17:33.565Z [STDERR] WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+2026-07-14T23:17:33.593Z [STDOUT] [youtube] dZ0fwJojhrs: Downloading android vr player API JSON
+2026-07-14T23:17:34.377Z [STDOUT] [info] dZ0fwJojhrs: Downloading 1 format(s): 251
+2026-07-14T23:17:34.409Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-14T23:17:34.627Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Guru Randhawa Lahore (Official Video) Bhushan Kumar  Vee  DirectorGifty  T-Series.webm
+2026-07-14T23:17:34.628Z [STDOUT] [download]   0.0% of    2.82MiB at  174.72KiB/s ETA 00:16
+2026-07-14T23:17:34.629Z [STDOUT] [download]   0.1% of    2.82MiB at  441.99KiB/s ETA 00:06
+2026-07-14T23:17:34.630Z [STDOUT] [download]   0.2% of    2.82MiB at  875.06KiB/s ETA 00:03
+2026-07-14T23:17:34.631Z [STDOUT] [download]   0.5% of    2.82MiB at    1.72MiB/s ETA 00:01
+2026-07-14T23:17:34.656Z [STDOUT] [download]   1.1% of    2.82MiB at  919.20KiB/s ETA 00:03
+2026-07-14T23:17:34.676Z [STDOUT] [download]   2.2% of    2.82MiB at    1.18MiB/s ETA 00:02
+2026-07-14T23:17:34.728Z [STDOUT] [download]   4.4% of    2.82MiB at    1.17MiB/s ETA 00:02
+2026-07-14T23:17:34.776Z [STDOUT] [download]   8.8% of    2.82MiB at    1.64MiB/s ETA 00:01
+2026-07-14T23:17:34.860Z [STDOUT] [download]  17.7% of    2.82MiB at    2.17MiB/s ETA 00:01
+2026-07-14T23:17:34.981Z [STDOUT] [download]  35.4% of    2.82MiB at    2.79MiB/s ETA 00:00
+2026-07-14T23:17:35.295Z [STDOUT] [download]  70.9% of    2.82MiB at    2.97MiB/s ETA 00:00
+2026-07-14T23:17:35.525Z [STDOUT] [download] 100.0% of    2.82MiB at    3.13MiB/s ETA 00:00
+2026-07-14T23:17:35.532Z [STDOUT] [download] 100% of    2.82MiB in 00:00:01 at 2.59MiB/s
+2026-07-14T23:17:38.692Z [STDOUT] [ExtractAudio] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Guru Randhawa Lahore (Official Video) Bhushan Kumar  Vee  DirectorGifty  T-Series.mp3
+2026-07-14T23:17:47.590Z [STDOUT] Deleting original file d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Guru Randhawa Lahore (Official Video) Bhushan Kumar  Vee  DirectorGifty  T-Series.webm (pass -k to keep)
+2026-07-14T23:17:47.596Z [STDOUT] [EmbedSubtitle] Subtitles can only be embedded in mp4, mov, m4a, webm, mkv, mka files

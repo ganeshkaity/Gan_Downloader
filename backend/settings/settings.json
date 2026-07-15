@@ -12,5 +12,8 @@
   "subtitlePreferences": "en",
   "ffmpegPath": "ffmpeg",
   "ytdlpPath": "yt-dlp",
-  "autoUpdateYtdlp": false
+  "autoUpdateYtdlp": false,
+  "cookieBrowser": "chrome",
+  "cookiesFile": "d:\\my workspace\\Personal_Tools\\Gan_Downloader\\www.youtube.com_cookies.txt",
+  "cookiesFilePath": "D:\\my workspace\\Personal_Tools\\Gan_Downloader\\www.youtube.com_cookies.txt"
 }

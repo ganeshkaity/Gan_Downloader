@@ -12,7 +12,9 @@ import {
   ChevronDown, 
   HelpCircle, 
   RefreshCw, 
-  AlertCircle 
+  AlertCircle,
+  LayoutGrid,
+  LayoutList
 } from 'lucide-react';
 
 interface PlaylistEntry {
@@ -40,6 +42,12 @@ export default function PlaylistDownloaderView() {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [globalFormat, setGlobalFormat] = useState('best');
+  const [globalAudio, setGlobalAudio] = useState('original');
+  const [globalSubtitles, setGlobalSubtitles] = useState('none');
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
+  const [rangeStart, setRangeStart] = useState('');
+  const [rangeEnd, setRangeEnd] = useState('');
+  const [visibleCount, setVisibleCount] = useState(100);
   
   // Track specific overrides
   const [entries, setEntries] = useState<PlaylistEntry[]>([]);
@@ -75,6 +83,9 @@ export default function PlaylistDownloaderView() {
         format: 'best'
       }));
       setEntries(initializedEntries);
+      setVisibleCount(100);
+      setRangeStart('');
+      setRangeEnd('');
     } catch (e: any) {
       setError(e?.message || 'Failed to extract playlist information.');
     } finally {
@@ -83,27 +94,34 @@ export default function PlaylistDownloaderView() {
   };
 
   // Toggle selection for an individual item
-  const toggleItem = (idx: number) => {
-    const updated = [...entries];
-    updated[idx].selected = !updated[idx].selected;
-    setEntries(updated);
+  const toggleItem = (id: string) => {
+    setEntries(entries.map(e => e.id === id ? { ...e, selected: !e.selected } : e));
   };
 
   // Set format override for individual item
-  const setItemFormat = (idx: number, format: string) => {
-    const updated = [...entries];
-    updated[idx].format = format;
-    setEntries(updated);
+  const setItemFormat = (id: string, format: string) => {
+    setEntries(entries.map(e => e.id === id ? { ...e, format } : e));
   };
 
-  // Select all items
-  const selectAll = () => {
-    setEntries(entries.map(e => ({ ...e, selected: true })));
+  // Apply range selection
+  const applyRangeSelection = () => {
+    const start = parseInt(rangeStart, 10);
+    const end = parseInt(rangeEnd, 10);
+    if (isNaN(start) || isNaN(end) || start < 1 || end < start) return;
+
+    setEntries(entries.map((e, idx) => {
+      const position = idx + 1; // 1-indexed
+      if (position >= start && position <= end) {
+        return { ...e, selected: true };
+      }
+      return e;
+    }));
   };
 
-  // Unselect all items
-  const unselectAll = () => {
-    setEntries(entries.map(e => ({ ...e, selected: false })));
+  // Toggle Select All
+  const toggleSelectAll = () => {
+    const allSelected = entries.every(e => e.selected);
+    setEntries(entries.map(e => ({ ...e, selected: !allSelected })));
   };
 
   // Apply format to all selected
@@ -145,10 +163,8 @@ export default function PlaylistDownloaderView() {
       await addToQueue(item.url, item.format || 'best', 'youtube');
     }
 
-    // Reset page view
-    setUrl('');
-    setPlaylist(null);
-    setEntries([]);
+    // Retain playlist, but uncheck the downloaded items
+    setEntries(entries.map(e => ({ ...e, selected: false })));
   };
 
   const formatDuration = (secs: number) => {
@@ -237,19 +253,7 @@ export default function PlaylistDownloaderView() {
                 </div>
               </div>
 
-              {/* Set Global Format */}
-              <div className="space-y-1.5 pt-2">
-                <label htmlFor="global-format" className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Apply Format to All</label>
-                <select
-                  id="global-format"
-                  value={globalFormat}
-                  onChange={(e) => applyGlobalFormat(e.target.value)}
-                  className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
-                >
-                  <option value="best">Best Quality Video</option>
-                  <option value="mp3">Audio Only (MP3)</option>
-                </select>
-              </div>
+              {/* Global Format removed from here to the new toolbar */}
 
               {/* Batch Action Button */}
               <button
@@ -265,88 +269,203 @@ export default function PlaylistDownloaderView() {
 
           {/* Right panel: Filter and Track cards */}
           <div className="col-span-1 lg:col-span-2 space-y-4">
-            {/* Filter actions bar */}
-            <div className="flex flex-col sm:flex-row items-center gap-3 border border-border bg-card p-3 rounded-lg shadow-xs">
-              <div className="relative flex-1 w-full">
-                <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Search tracks in playlist..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded bg-secondary/35 border border-border pl-8 pr-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
-                />
+            {/* Configuration bar */}
+            <div className="flex flex-col xl:flex-row xl:items-center gap-4 border border-border bg-card p-3 rounded-lg shadow-xs text-xs text-muted-foreground">
+              <div className="flex items-center gap-3 shrink-0">
+                <label className="flex items-center gap-2 cursor-pointer font-semibold text-foreground hover:text-primary transition-colors shrink-0">
+                  <input 
+                    type="checkbox" 
+                    checked={entries.length > 0 && entries.every(e => e.selected)}
+                    onChange={toggleSelectAll}
+                    className="rounded border-zinc-700 bg-zinc-900 text-primary focus:ring-primary focus:ring-offset-zinc-950 h-3.5 w-3.5 cursor-pointer"
+                  />
+                  Select all
+                </label>
+
+                {/* Range Select */}
+                <div className="flex items-center gap-1 border-l border-zinc-800 pl-3">
+                  <span>Range:</span>
+                  <input 
+                    type="number"
+                    placeholder="Min"
+                    value={rangeStart}
+                    onChange={(e) => setRangeStart(e.target.value)}
+                    className="w-12 bg-background border border-border text-foreground rounded px-1.5 py-0.5 text-center text-[10px] focus:outline-none focus:ring-1 focus:ring-primary"
+                    min={1}
+                    max={entries.length}
+                  />
+                  <span>to</span>
+                  <input 
+                    type="number"
+                    placeholder="Max"
+                    value={rangeEnd}
+                    onChange={(e) => setRangeEnd(e.target.value)}
+                    className="w-12 bg-background border border-border text-foreground rounded px-1.5 py-0.5 text-center text-[10px] focus:outline-none focus:ring-1 focus:ring-primary"
+                    min={1}
+                    max={entries.length}
+                  />
+                  <button
+                    type="button"
+                    onClick={applyRangeSelection}
+                    className="px-2 py-0.5 bg-primary/20 text-primary hover:bg-primary/30 rounded text-[10px] font-semibold transition-colors ml-1"
+                  >
+                    Apply
+                  </button>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end">
+              <div className="flex flex-wrap items-center gap-4 flex-1">
+                <div className="flex items-center gap-2">
+                  <label>Default format:</label>
+                  <select 
+                    value={globalFormat}
+                    onChange={(e) => applyGlobalFormat(e.target.value)}
+                    className="bg-background border border-border text-foreground rounded px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-primary"
+                  >
+                    <optgroup label="Video">
+                      <option value="best">Best Quality (Default)</option>
+                      <option value="mp4_2160p">MP4 4K (2160p)</option>
+                      <option value="mp4_1440p">MP4 2K (1440p)</option>
+                      <option value="mp4_1080p">MP4 1080p</option>
+                      <option value="mp4_720p">MP4 720p</option>
+                      <option value="mp4_480p">MP4 480p</option>
+                    </optgroup>
+                    <optgroup label="Audio">
+                      <option value="mp3_320">MP3 320kbps (Best)</option>
+                      <option value="mp3_128">MP3 128kbps (Standard)</option>
+                      <option value="m4a">M4A (AAC Audio)</option>
+                      <option value="wav">WAV (Lossless Audio)</option>
+                    </optgroup>
+                  </select>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <label>Audio track:</label>
+                  <select
+                    value={globalAudio}
+                    onChange={(e) => setGlobalAudio(e.target.value)}
+                    className="bg-background border border-border text-foreground rounded px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-primary"
+                  >
+                    <option value="original">Original Track (Default)</option>
+                    <option value="english">English (Translated)</option>
+                  </select>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <label>Subtitles:</label>
+                  <select
+                    value={globalSubtitles}
+                    onChange={(e) => setGlobalSubtitles(e.target.value)}
+                    className="bg-background border border-border text-foreground rounded px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-primary"
+                  >
+                    <option value="none">No Subtitles</option>
+                    <option value="en">English</option>
+                    <option value="all">All Available</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="flex items-center border border-border rounded overflow-hidden shrink-0">
                 <button
-                  onClick={selectAll}
-                  className="px-2.5 py-1.5 border border-border bg-card hover:bg-secondary rounded text-xs font-semibold transition-colors"
+                  onClick={() => setViewMode('grid')}
+                  className={`p-1.5 transition-colors ${viewMode === 'grid' ? 'bg-primary/20 text-primary' : 'bg-background hover:bg-secondary'}`}
+                  title="Grid View"
                 >
-                  Select All
+                  <LayoutGrid className="h-4 w-4" />
                 </button>
                 <button
-                  onClick={unselectAll}
-                  className="px-2.5 py-1.5 border border-border bg-card hover:bg-secondary rounded text-xs font-semibold transition-colors"
+                  onClick={() => setViewMode('list')}
+                  className={`p-1.5 transition-colors ${viewMode === 'list' ? 'bg-primary/20 text-primary' : 'bg-background hover:bg-secondary'}`}
+                  title="List View"
                 >
-                  Unselect All
+                  <LayoutList className="h-4 w-4" />
                 </button>
               </div>
             </div>
 
             {/* Virtualized/Scroll track cards container */}
-            <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-              {filteredEntries.map((item, index) => (
-                <div 
-                  key={item.id} 
-                  className={`flex items-center gap-3 rounded-lg border p-3 bg-card hover:bg-secondary/10 transition-colors ${
-                    item.selected ? 'border-border' : 'border-border/30 opacity-60'
-                  }`}
-                >
-                  {/* Select Checkbox */}
-                  <button 
-                    onClick={() => toggleItem(index)}
-                    className="p-1 rounded hover:bg-secondary text-muted-foreground hover:text-foreground shrink-0"
+            <div className={`max-h-[600px] overflow-y-auto pr-1 pb-4 ${viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-3' : 'space-y-2'}`}>
+              {filteredEntries.slice(0, visibleCount).map((item, index) => (
+                viewMode === 'grid' ? (
+                  <div 
+                    key={`${item.id}-${index}`} 
+                    className={`relative flex items-center gap-3 rounded-lg border p-2 bg-card hover:border-primary/50 transition-colors ${
+                      item.selected ? 'border-primary/50 bg-primary/5' : 'border-border'
+                    }`}
                   >
-                    {item.selected ? (
-                      <CheckSquare className="h-4.5 w-4.5 text-primary" />
-                    ) : (
-                      <Square className="h-4.5 w-4.5" />
-                    )}
-                  </button>
+                    {/* Checkbox overlay */}
+                    <input
+                      type="checkbox"
+                      checked={item.selected}
+                      onChange={() => toggleItem(item.id)}
+                      className="absolute top-2 right-2 h-4 w-4 rounded border-zinc-700 bg-zinc-900 text-primary focus:ring-primary focus:ring-offset-zinc-950 cursor-pointer z-10 shadow-sm"
+                    />
+                    
+                    <div className="relative h-16 w-24 shrink-0 rounded overflow-hidden bg-black flex items-center justify-center border border-border/50">
+                      {item.thumbnail ? (
+                        <img src={item.thumbnail} alt="thumb" className="w-full h-full object-cover opacity-90" />
+                      ) : (
+                        <ListMusic className="h-5 w-5 text-muted-foreground opacity-50" />
+                      )}
+                      <span className="absolute bottom-1 right-1 bg-black/80 text-[9px] font-medium text-zinc-200 px-1 rounded shadow-xs">
+                        {formatDuration(item.duration)}
+                      </span>
+                    </div>
 
-                  {/* Micro Thumbnail */}
-                  <div className="relative aspect-video w-20 rounded bg-secondary border border-border overflow-hidden shrink-0">
+                    <div className="flex-1 min-w-0 pr-5">
+                      <h4 className="text-xs font-semibold leading-tight line-clamp-2" title={item.title}>
+                        {item.title}
+                      </h4>
+                      <p className="text-[10px] text-muted-foreground mt-1 truncate">
+                        {playlist?.uploader || 'Unknown Channel'}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div 
+                    key={`${item.id}-${index}`} 
+                    className={`flex items-center gap-3 rounded-lg border p-3 bg-card hover:bg-secondary/10 transition-colors ${
+                      item.selected ? 'border-primary/30 bg-primary/5' : 'border-border/30 opacity-60'
+                    }`}
+                  >
+                    {/* Select Checkbox */}
+                    <input
+                      type="checkbox"
+                      checked={item.selected}
+                      onChange={() => toggleItem(item.id)}
+                      className="h-4 w-4 rounded border-zinc-700 bg-zinc-900 text-primary focus:ring-primary focus:ring-offset-zinc-950 cursor-pointer shrink-0"
+                    />
+                    
                     {item.thumbnail ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={item.thumbnail} alt="" className="object-cover w-full h-full" />
+                      <img src={item.thumbnail} alt="thumb" className="h-10 w-16 object-cover rounded shadow-xs shrink-0" />
                     ) : (
-                      <ListMusic className="h-4 w-4 m-auto text-muted-foreground" />
+                      <div className="h-10 w-16 bg-secondary rounded flex items-center justify-center shrink-0">
+                        <ListMusic className="h-4 w-4 opacity-50" />
+                      </div>
                     )}
-                    <span className="absolute bottom-0.5 right-0.5 bg-black/80 text-[8px] text-white px-1 rounded font-mono">
-                      {formatDuration(item.duration)}
-                    </span>
-                  </div>
 
-                  {/* Title and details */}
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-xs text-foreground truncate">{item.title}</h4>
-                    <p className="text-[9px] text-muted-foreground mt-0.5 truncate">{item.url}</p>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-sm font-semibold truncate" title={item.title}>{item.title}</h4>
+                      <p className="text-[10px] text-muted-foreground mt-0.5">
+                        {formatDuration(item.duration)}
+                      </p>
+                    </div>
                   </div>
-
-                  {/* Format dropdown */}
-                  <div className="shrink-0">
-                    <select
-                      value={item.format || 'best'}
-                      onChange={(e) => setItemFormat(index, e.target.value)}
-                      className="bg-secondary/40 border border-border rounded px-1.5 py-0.5 text-[10px] focus:outline-none"
-                    >
-                      <option value="best">Video</option>
-                      <option value="mp3">Audio (MP3)</option>
-                    </select>
-                  </div>
-                </div>
+                )
               ))}
+
+              {visibleCount < filteredEntries.length && (
+                <div className="flex justify-center pt-4 pb-2 col-span-full w-full">
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount(prev => prev + 50)}
+                    className="px-5 py-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-100 rounded-lg border border-zinc-850 text-xs font-semibold transition-colors flex items-center gap-2 shadow-xs cursor-pointer"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5 animate-pulse" />
+                    Load More Tracks ({filteredEntries.length - visibleCount} remaining)
+                  </button>
+                </div>
+              )}
 
               {filteredEntries.length === 0 && (
                 <div className="text-center py-8 text-xs text-muted-foreground">No matching tracks found.</div>

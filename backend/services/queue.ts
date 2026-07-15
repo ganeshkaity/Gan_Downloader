@@ -240,18 +240,48 @@ export class QueueService {
         '--no-colors',
         '--progress',
         '--newline',
-        '--ffmpeg-location', settings.ffmpegPath
+        '--js-runtimes', 'node',
+        '--remote-components', 'ejs:github'
       ];
+      if (settings.ffmpegPath && settings.ffmpegPath !== 'ffmpeg') {
+        args.push('--ffmpeg-location', settings.ffmpegPath);
+      }
+      if (settings.cookiesFilePath && settings.cookiesFilePath.trim() !== '') {
+        args.push('--cookies', settings.cookiesFilePath.trim());
+      } else if (settings.cookieBrowser && settings.cookieBrowser !== 'none') {
+        args.push('--cookies-from-browser', settings.cookieBrowser);
+      }
 
       // Add format configurations
-      if (item.format === 'mp3' || item.format === 'bestaudio') {
-        args.push('-x', '--audio-format', 'mp3', '--audio-quality', '0');
-      } else if (item.format && item.format !== 'best') {
-        // Direct format string
-        args.push('-f', item.format);
+      const format = item.format || 'best';
+      const hasFfmpeg = !!settings.ffmpegPath;
+      
+      if (format === 'mp3_320') {
+        args.push('-f', 'bestaudio/best', '-x', '--audio-format', 'mp3', '--audio-quality', '0');
+      } else if (format === 'mp3_128') {
+        args.push('-f', 'bestaudio/best', '-x', '--audio-format', 'mp3', '--audio-quality', '5');
+      } else if (format === 'm4a') {
+        args.push('-f', 'bestaudio/best', '-x', '--audio-format', 'm4a');
+      } else if (format === 'wav') {
+        args.push('-f', 'bestaudio/best', '-x', '--audio-format', 'wav');
+      } else if (format.startsWith('mp4_')) {
+        const height = format.split('_')[1].replace('p', '');
+        if (hasFfmpeg) {
+          args.push('-f', `bestvideo[height<=${height}]+bestaudio/best[height<=${height}]/best`);
+          args.push('--merge-output-format', 'mp4');
+        } else {
+          // No ffmpeg: use pre-merged single-stream format only
+          args.push('-f', `best[height<=${height}]/best`);
+        }
+      } else if (format === 'best') {
+        if (hasFfmpeg) {
+          args.push('-f', 'bestvideo+bestaudio/best');
+          args.push('--merge-output-format', 'mp4');
+        } else {
+          args.push('-f', 'best');
+        }
       } else {
-        // Default best
-        args.push('-f', settings.defaultVideoQuality);
+        args.push('-f', format);
       }
 
       // Add subtitle configurations if applicable
@@ -271,6 +301,8 @@ export class QueueService {
         fs.mkdirSync(logDir, { recursive: true });
       }
       const logStream = fs.createWriteStream(path.join(logDir, `${item.id}.log`), { flags: 'a' });
+
+      let stderrAccumulator = '';
 
       child.stdout.on('data', (data: Buffer) => {
         const lines = data.toString().split('\n');
@@ -308,7 +340,9 @@ export class QueueService {
       });
 
       child.stderr.on('data', (data: Buffer) => {
-        const lines = data.toString().split('\n');
+        const text = data.toString();
+        stderrAccumulator += text;
+        const lines = text.split('\n');
         for (let line of lines) {
           line = line.trim();
           if (!line) continue;
@@ -318,7 +352,7 @@ export class QueueService {
         }
       });
 
-      child.on('close', (code) => {
+      child.on('close', async (code) => {
         this.activeProcesses.delete(item.id);
         logStream.end();
 
@@ -368,6 +402,115 @@ export class QueueService {
         } else {
           // If state is already cancelled, don't override
           if (item.status !== 'Cancelled') {
+            // Check if error is "Requested format is not available" - retry with universal fallback
+            const hasFormatError = stderrAccumulator.includes('Requested format is not available') || item.logs.some(l => l.includes('Requested format is not available'));
+            const alreadyFallback = item.logs.some(l => l.includes('[FALLBACK]'));
+            
+            if (hasFormatError && !alreadyFallback) {
+              item.logs.push('[FALLBACK] Requested format unavailable. Retrying with universal fallback format...');
+              this.emitUpdate();
+
+              // Determine fallback format args based on original format intent
+              const isAudioFormat = ['mp3_320', 'mp3_128', 'm4a', 'wav'].includes(item.format);
+              const fallbackArgs: string[] = [
+                item.url,
+                '-o', path.join(settings.downloadFolder, settings.defaultOutputTemplate),
+                '--no-colors', '--progress', '--newline',
+                '--js-runtimes', 'node',
+                '--remote-components', 'ejs:github'
+              ];
+
+              if (settings.ffmpegPath && settings.ffmpegPath !== 'ffmpeg') {
+                fallbackArgs.push('--ffmpeg-location', settings.ffmpegPath);
+              }
+              if (settings.cookiesFilePath && settings.cookiesFilePath.trim() !== '') {
+                fallbackArgs.push('--cookies', settings.cookiesFilePath.trim());
+              } else if (settings.cookieBrowser && settings.cookieBrowser !== 'none') {
+                fallbackArgs.push('--cookies-from-browser', settings.cookieBrowser);
+              }
+
+              if (isAudioFormat) {
+                fallbackArgs.push('-f', 'bestaudio/best', '-x', '--audio-format', 'mp3', '--audio-quality', '0');
+              } else {
+                // Simplest possible video fallback - no merge needed, just get what's available
+                fallbackArgs.push('-f', 'best');
+              }
+
+              item.logs.push(`[FALLBACK] Spawning yt-dlp with fallback args: ${fallbackArgs.join(' ')}`);
+              this.emitLog(item.id, '[FALLBACK] Spawning with fallback format...');
+              this.emitUpdate();
+
+              const fallbackChild = spawn(settings.ytdlpPath, fallbackArgs);
+              this.activeProcesses.set(item.id, fallbackChild);
+
+              const fallbackLogStream = fs.createWriteStream(path.join(__dirname, '..', 'logs', `${item.id}.log`), { flags: 'a' });
+
+              fallbackChild.stdout.on('data', (data: Buffer) => {
+                for (let line of data.toString().split('\n')) {
+                  line = line.trim();
+                  if (!line) continue;
+                  item.logs.push(line);
+                  fallbackLogStream.write(`${new Date().toISOString()} [FALLBACK-STDOUT] ${line}\n`);
+                  this.emitLog(item.id, line);
+
+                  const progressRegex = /\[download\]\s+(\d+(?:\.\d+)?)%\s+of\s+~?(\d+(?:\.\d+)?\w+)\s+at\s+(\d+(?:\.\d+)?\w+\/s)\s+ETA\s+(\d+(?::\d+)+)/i;
+                  const match = line.match(progressRegex);
+                  if (match) {
+                    item.progress = parseFloat(match[1]);
+                    item.totalMb = match[2];
+                    item.speed = match[3];
+                    item.eta = match[4];
+                    this.emitUpdate();
+                  }
+                  const destMatch = line.match(/\[download\]\s+Destination:\s+(.*)/i);
+                  if (destMatch) {
+                    item.fileName = path.basename(destMatch[1]);
+                    item.downloadPath = destMatch[1];
+                    this.emitUpdate();
+                  }
+                }
+              });
+              fallbackChild.stderr.on('data', (data: Buffer) => {
+                for (let line of data.toString().split('\n')) {
+                  line = line.trim();
+                  if (!line) continue;
+                  item.logs.push(`[ERROR] ${line}`);
+                  fallbackLogStream.write(`${new Date().toISOString()} [FALLBACK-STDERR] ${line}\n`);
+                  this.emitLog(item.id, `[ERROR] ${line}`);
+                }
+              });
+              fallbackChild.on('close', (fallbackCode) => {
+                this.activeProcesses.delete(item.id);
+                fallbackLogStream.end();
+                if (fallbackCode === 0) {
+                  item.status = 'Completed';
+                  item.progress = 100;
+                  item.speed = '0 B/s';
+                  item.eta = '00:00';
+                  item.finishedAt = new Date().toISOString();
+                  item.logs.push('Finished download successfully (via fallback format).');
+                  if (!item.fileName) {
+                    item.fileName = `${item.title.substring(0, 30)}.mp4`;
+                    item.downloadPath = path.join(settings.downloadFolder, item.fileName);
+                  }
+                  HistoryService.addRecord({
+                    id: item.id, title: item.title, normalizedTitle: HistoryService.normalizeTitle(item.title),
+                    url: item.url, platform: item.platform, downloadedAt: item.finishedAt,
+                    fileName: item.fileName, quality: item.format + ' (fallback)',
+                    downloadPath: item.downloadPath, duration: '0:00', hash: uuidv4(), fileSize: item.totalMb || 'Unknown'
+                  });
+                  item.logs.push('Added item to history database.');
+                } else {
+                  item.status = 'Failed';
+                  item.error = 'Fallback download also failed. yt-dlp exited with code ' + fallbackCode;
+                  item.logs.push(`Error: Fallback also failed with code ${fallbackCode}.`);
+                }
+                this.emitUpdate();
+                this.processQueue();
+              });
+              return; // Don't call processQueue now; it will be called from fallback close
+            }
+
             item.status = 'Failed';
             item.error = 'yt-dlp exited with non-zero code ' + code;
             item.logs.push(`Error: yt-dlp exited with code ${code}.`);
@@ -393,7 +536,15 @@ export class QueueService {
     return new Promise((resolve, reject) => {
       const settings = SettingsService.getSettings();
       // Run dump-json
-      const args = [url, '--dump-json', '--no-warnings', '--ffmpeg-location', settings.ffmpegPath];
+      const args = [url, '--dump-json', '--no-warnings', '--js-runtimes', 'node', '--remote-components', 'ejs:github'];
+      if (settings.ffmpegPath && settings.ffmpegPath !== 'ffmpeg') {
+        args.push('--ffmpeg-location', settings.ffmpegPath);
+      }
+      if (settings.cookiesFilePath && settings.cookiesFilePath.trim() !== '') {
+        args.push('--cookies', settings.cookiesFilePath.trim());
+      } else if (settings.cookieBrowser && settings.cookieBrowser !== 'none') {
+        args.push('--cookies-from-browser', settings.cookieBrowser);
+      }
       
       const child = spawn(settings.ytdlpPath, args);
       let stdoutData = '';

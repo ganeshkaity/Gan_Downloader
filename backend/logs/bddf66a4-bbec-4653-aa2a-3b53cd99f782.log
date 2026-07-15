@@ -1,0 +1,25 @@
+2026-07-15T00:25:09.454Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=ldy17W1xi-c
+2026-07-15T00:25:09.454Z [STDOUT] [youtube] ldy17W1xi-c: Downloading webpage
+2026-07-15T00:25:10.987Z [STDOUT] [youtube] ldy17W1xi-c: Downloading tv downgraded player API JSON
+2026-07-15T00:25:11.919Z [STDOUT] [youtube] ldy17W1xi-c: Downloading player 9b33d56a-main
+2026-07-15T00:25:12.872Z [STDOUT] [youtube] [jsc:node] Solving JS challenges using node
+2026-07-15T00:25:16.825Z [STDOUT] [youtube] ldy17W1xi-c: Downloading m3u8 information
+2026-07-15T00:25:17.909Z [STDOUT] [info] ldy17W1xi-c: Downloading 1 format(s): 251
+2026-07-15T00:25:17.969Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-15T00:25:18.270Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Haseeno Ka Deewana Full Video Song  Kaabil  Hrithik Roshan, Urvashi Rautela  Raftaar & Payal Dev.webm
+2026-07-15T00:25:18.271Z [STDOUT] [download]   0.0% of    3.62MiB at   80.31KiB/s ETA 00:46
+2026-07-15T00:25:18.271Z [STDOUT] [download]   0.1% of    3.62MiB at  226.77KiB/s ETA 00:16
+2026-07-15T00:25:18.274Z [STDOUT] [download]   0.2% of    3.62MiB at  508.25KiB/s ETA 00:07
+2026-07-15T00:25:18.275Z [STDOUT] [download]   0.4% of    3.62MiB at  884.39KiB/s ETA 00:04
+2026-07-15T00:25:18.285Z [STDOUT] [download]   0.8% of    3.62MiB at    1.26MiB/s ETA 00:02
+2026-07-15T00:25:18.347Z [STDOUT] [download]   1.7% of    3.62MiB at  720.98KiB/s ETA 00:05
+2026-07-15T00:25:18.398Z [STDOUT] [download]   3.4% of    3.62MiB at  912.55KiB/s ETA 00:03
+2026-07-15T00:25:18.511Z [STDOUT] [download]   6.9% of    3.62MiB at 1008.77KiB/s ETA 00:03
+2026-07-15T00:25:18.677Z [STDOUT] [download]  13.8% of    3.62MiB at    1.19MiB/s ETA 00:02
+2026-07-15T00:25:18.911Z [STDOUT] [download]  27.6% of    3.62MiB at    1.53MiB/s ETA 00:01
+2026-07-15T00:25:19.243Z [STDOUT] [download]  55.2% of    3.62MiB at    2.03MiB/s ETA 00:00
+2026-07-15T00:25:19.740Z [STDOUT] [download] 100.0% of    3.62MiB at    2.44MiB/s ETA 00:00
+2026-07-15T00:25:19.755Z [STDOUT] [download] 100% of    3.62MiB in 00:00:01 at 2.07MiB/s
+2026-07-15T00:25:20.524Z [STDOUT] [ExtractAudio] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Haseeno Ka Deewana Full Video Song  Kaabil  Hrithik Roshan, Urvashi Rautela  Raftaar & Payal Dev.mp3
+2026-07-15T00:25:34.101Z [STDOUT] Deleting original file d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Haseeno Ka Deewana Full Video Song  Kaabil  Hrithik Roshan, Urvashi Rautela  Raftaar & Payal Dev.webm (pass -k to keep)
+2026-07-15T00:25:34.120Z [STDOUT] [EmbedSubtitle] Subtitles can only be embedded in mp4, mov, m4a, webm, mkv, mka files

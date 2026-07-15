@@ -12,12 +12,14 @@ interface AppState {
   connected: boolean;
   selectedQueueItemId: string | null;
   logMap: Record<string, string[]>;
+  consoleOpen: boolean;
   
   // Actions
   init: () => void;
   setTheme: (theme: 'light' | 'dark') => void;
   setActiveView: (view: string) => void;
   setSelectedQueueItemId: (id: string | null) => void;
+  setConsoleOpen: (open: boolean) => void;
   fetchSettings: () => Promise<void>;
   updateSettings: (settings: Partial<AppSettings>) => Promise<void>;
   fetchHealth: () => Promise<void>;
@@ -42,6 +44,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   connected: false,
   selectedQueueItemId: null,
   logMap: {},
+  consoleOpen: false,
 
   init: () => {
     if (get().socket) return; // Already initialized
@@ -99,6 +102,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   setActiveView: (activeView) => set({ activeView }),
   setSelectedQueueItemId: (selectedQueueItemId) => set({ selectedQueueItemId }),
+  setConsoleOpen: (consoleOpen) => set({ consoleOpen }),
 
   fetchSettings: async () => {
     try {
@@ -157,6 +161,8 @@ export const useAppStore = create<AppState>((set, get) => ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url, format, platform })
       });
+      // Auto-expand the console panel
+      set({ consoleOpen: true });
     } catch (e) {
       console.error('Failed to add to queue:', e);
     }

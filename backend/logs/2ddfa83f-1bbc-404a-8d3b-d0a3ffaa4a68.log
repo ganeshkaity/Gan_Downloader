@@ -1,0 +1,24 @@
+2026-07-14T23:31:06.323Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=YPohR_9v6HA
+2026-07-14T23:31:06.323Z [STDOUT] [youtube] YPohR_9v6HA: Downloading webpage
+2026-07-14T23:31:10.472Z [STDERR] WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+2026-07-14T23:31:10.486Z [STDOUT] [youtube] YPohR_9v6HA: Downloading android vr player API JSON
+2026-07-14T23:31:12.165Z [STDOUT] [info] YPohR_9v6HA: Downloading 1 format(s): 251
+2026-07-14T23:31:12.199Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-14T23:31:12.386Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Titliaan  Harrdy Sandhu  Sargun Mehta  Afsana Khan  Jaani  Avvy Sra  Arvindr Khaira.webm
+2026-07-14T23:31:12.389Z [STDOUT] [download]   0.0% of    4.47MiB at  813.01KiB/s ETA 00:05
+2026-07-14T23:31:12.389Z [STDOUT] [download]   0.1% of    4.47MiB at  770.92KiB/s ETA 00:05
+2026-07-14T23:31:12.393Z [STDOUT] [download]   0.2% of    4.47MiB at    1.56MiB/s ETA 00:02
+2026-07-14T23:31:12.395Z [STDOUT] [download]   0.3% of    4.47MiB at    1.54MiB/s ETA 00:02
+2026-07-14T23:31:12.421Z [STDOUT] [download]   0.7% of    4.47MiB at  864.88KiB/s ETA 00:05
+2026-07-14T23:31:12.440Z [STDOUT] [download]   1.4% of    4.47MiB at    1.13MiB/s ETA 00:03
+2026-07-14T23:31:12.492Z [STDOUT] [download]   2.8% of    4.47MiB at    1.17MiB/s ETA 00:03
+2026-07-14T23:31:12.559Z [STDOUT] [download]   5.6% of    4.47MiB at    1.44MiB/s ETA 00:02
+2026-07-14T23:31:12.618Z [STDOUT] [download]  11.2% of    4.47MiB at    2.15MiB/s ETA 00:01
+2026-07-14T23:31:12.710Z [STDOUT] [download]  22.4% of    4.47MiB at    3.08MiB/s ETA 00:01
+2026-07-14T23:31:12.850Z [STDOUT] [download]  44.8% of    4.47MiB at    4.32MiB/s ETA 00:00
+2026-07-14T23:31:13.171Z [STDOUT] [download]  89.6% of    4.47MiB at    5.09MiB/s ETA 00:00
+2026-07-14T23:31:13.204Z [STDOUT] [download] 100.0% of    4.47MiB at    5.45MiB/s ETA 00:00
+2026-07-14T23:31:13.206Z [STDOUT] [download] 100% of    4.47MiB in 00:00:00 at 4.53MiB/s
+2026-07-14T23:31:13.669Z [STDOUT] [ExtractAudio] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Titliaan  Harrdy Sandhu  Sargun Mehta  Afsana Khan  Jaani  Avvy Sra  Arvindr Khaira.mp3
+2026-07-14T23:31:21.492Z [STDOUT] Deleting original file d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Titliaan  Harrdy Sandhu  Sargun Mehta  Afsana Khan  Jaani  Avvy Sra  Arvindr Khaira.webm (pass -k to keep)
+2026-07-14T23:31:21.502Z [STDOUT] [EmbedSubtitle] Subtitles can only be embedded in mp4, mov, m4a, webm, mkv, mka files

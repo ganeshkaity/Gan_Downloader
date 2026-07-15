@@ -1,0 +1,22 @@
+2026-07-14T22:53:40.226Z [STDERR] WARNING: ffmpeg-location ffmpeg does not exist! Continuing without ffmpeg
+2026-07-14T22:53:40.629Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=YpkJO_GrCo0
+2026-07-14T22:53:40.630Z [STDOUT] [youtube] YpkJO_GrCo0: Downloading webpage
+2026-07-14T22:53:44.348Z [STDERR] WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+2026-07-14T22:53:44.353Z [STDOUT] [youtube] YpkJO_GrCo0: Downloading android vr player API JSON
+2026-07-14T22:53:45.844Z [STDOUT] [info] YpkJO_GrCo0: Downloading 1 format(s): 251
+2026-07-14T22:53:45.864Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-14T22:53:46.947Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Laung Laachi Title Song  Mannat Noor  Ammy Virk, Neeru Bajwa,Amberdeep  Latest Punjabi Song 2018.webm
+2026-07-14T22:53:46.950Z [STDOUT] [download]   0.0% of    3.01MiB at  226.14KiB/s ETA 00:13
+2026-07-14T22:53:46.957Z [STDOUT] [download]   0.1% of    3.01MiB at  240.83KiB/s ETA 00:12
+2026-07-14T22:53:46.959Z [STDOUT] [download]   0.2% of    3.01MiB at  528.09KiB/s ETA 00:05
+2026-07-14T22:53:46.962Z [STDOUT] [download]   0.5% of    3.01MiB at  946.04KiB/s ETA 00:03
+2026-07-14T22:53:47.003Z [STDOUT] [download]   1.0% of    3.01MiB at  523.27KiB/s ETA 00:05
+2026-07-14T22:53:47.009Z [STDOUT] [download]   2.0% of    3.01MiB at  947.60KiB/s ETA 00:03
+2026-07-14T22:53:47.366Z [STDOUT] [download]   4.1% of    3.01MiB at  301.30KiB/s ETA 00:09
+2026-07-14T22:53:47.454Z [STDOUT] [download]   8.3% of    3.01MiB at  498.94KiB/s ETA 00:05
+2026-07-14T22:53:47.539Z [STDOUT] [download]  16.6% of    3.01MiB at  856.42KiB/s ETA 00:03
+2026-07-14T22:53:47.663Z [STDOUT] [download]  33.1% of    3.01MiB at    1.39MiB/s ETA 00:01
+2026-07-14T22:53:47.909Z [STDOUT] [download]  66.3% of    3.01MiB at    2.07MiB/s ETA 00:00
+2026-07-14T22:53:48.126Z [STDOUT] [download] 100.0% of    3.01MiB at    2.55MiB/s ETA 00:00
+2026-07-14T22:53:48.128Z [STDOUT] [download] 100% of    3.01MiB in 00:00:02 at 1.34MiB/s
+2026-07-14T22:53:48.189Z [STDERR] ERROR: Postprocessing: ffprobe and ffmpeg not found. Please install or provide the path using --ffmpeg-location

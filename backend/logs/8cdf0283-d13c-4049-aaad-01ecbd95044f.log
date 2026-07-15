@@ -1,0 +1,15 @@
+2026-07-14T23:23:44.566Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=RKioDWlajvo
+2026-07-14T23:23:44.568Z [STDOUT] [youtube] RKioDWlajvo: Downloading webpage
+2026-07-14T23:23:46.027Z [STDERR] WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+2026-07-14T23:23:46.043Z [STDOUT] [youtube] RKioDWlajvo: Downloading android vr player API JSON
+2026-07-14T23:23:47.408Z [STDOUT] [info] RKioDWlajvo: Downloading subtitles: en
+2026-07-14T23:23:47.621Z [STDOUT] [info] RKioDWlajvo: Downloading 1 format(s): 251
+2026-07-14T23:23:47.737Z [STDOUT] [info] Writing video subtitles to: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Lehanga  Jass Manak (Official Video) Satti Dhillon - India's Most Viewed Song - Hit Punjabi Song.en.vtt
+2026-07-14T23:23:47.739Z [STDERR] WARNING: The extractor specified to use impersonation for this download, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies
+2026-07-14T23:23:48.101Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Lehanga  Jass Manak (Official Video) Satti Dhillon - India's Most Viewed Song - Hit Punjabi Song.en.vtt
+2026-07-14T23:23:48.118Z [STDOUT] [download]    1.00KiB at  112.74KiB/s (00:00:00)
+2026-07-14T23:23:48.120Z [STDOUT] [download]    2.39KiB at  117.32KiB/s (00:00:00)
+2026-07-14T23:23:48.142Z [STDOUT] [download] 100% of    2.39KiB in 00:00:00 at 5.91KiB/s
+2026-07-14T23:23:48.289Z [STDOUT] [download] d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Lehanga  Jass Manak (Official Video) Satti Dhillon - India's Most Viewed Song - Hit Punjabi Song.mp3 has already been downloaded
+2026-07-14T23:23:48.576Z [STDOUT] [ExtractAudio] Not converting audio d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Lehanga  Jass Manak (Official Video) Satti Dhillon - India's Most Viewed Song - Hit Punjabi Song.mp3; file is already in target format mp3
+2026-07-14T23:23:48.580Z [STDOUT] [EmbedSubtitle] Subtitles can only be embedded in mp4, mov, m4a, webm, mkv, mka files

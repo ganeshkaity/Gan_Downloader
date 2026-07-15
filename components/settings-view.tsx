@@ -21,6 +21,8 @@ export default function SettingsView() {
   const [subtitlePreferences, setSubtitlePreferences] = useState('');
   const [ffmpegPath, setFfmpegPath] = useState('ffmpeg');
   const [ytdlpPath, setYtdlpPath] = useState('yt-dlp');
+  const [cookieBrowser, setCookieBrowser] = useState('none');
+  const [cookiesFilePath, setCookiesFilePath] = useState('');
   
   const [saved, setSaved] = useState(false);
 
@@ -40,6 +42,8 @@ export default function SettingsView() {
       setSubtitlePreferences(settings.subtitlePreferences || '');
       setFfmpegPath(settings.ffmpegPath || 'ffmpeg');
       setYtdlpPath(settings.ytdlpPath || 'yt-dlp');
+      setCookieBrowser((settings as any).cookieBrowser || 'none');
+      setCookiesFilePath((settings as any).cookiesFilePath || '');
     }
   }, [settings]);
 
@@ -58,8 +62,10 @@ export default function SettingsView() {
       defaultOutputTemplate,
       subtitlePreferences,
       ffmpegPath,
-      ytdlpPath
-    });
+      ytdlpPath,
+      cookieBrowser,
+      cookiesFilePath
+    } as any);
 
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
@@ -147,6 +153,46 @@ export default function SettingsView() {
                   className="w-full rounded border border-border bg-background px-3 py-2 text-xs focus:outline-none"
                   required
                 />
+              </div>
+            </div>
+
+            {/* Cookie Settings Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Cookie Browser Selector */}
+              <div className="space-y-1.5">
+                <label className="font-semibold text-muted-foreground">Cookie Source Browser</label>
+                <select
+                  value={cookieBrowser}
+                  onChange={(e) => setCookieBrowser(e.target.value)}
+                  className="w-full rounded border border-border bg-background px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+                >
+                  <option value="none">None (No Cookies)</option>
+                  <option value="chrome">Chrome</option>
+                  <option value="firefox">Firefox</option>
+                  <option value="edge">Microsoft Edge</option>
+                  <option value="opera">Opera</option>
+                  <option value="brave">Brave</option>
+                  <option value="safari">Safari</option>
+                  <option value="chromium">Chromium</option>
+                </select>
+                <span className="text-[10px] text-muted-foreground">
+                  Reads cookies from the browser profile. <strong>Note:</strong> On Windows, Chrome/Edge/Brave must be fully closed to copy their cookie database.
+                </span>
+              </div>
+
+              {/* Custom Cookies File Path */}
+              <div className="space-y-1.5">
+                <label className="font-semibold text-muted-foreground">Custom cookies.txt File Path (Override)</label>
+                <input
+                  type="text"
+                  value={cookiesFilePath}
+                  onChange={(e) => setCookiesFilePath(e.target.value)}
+                  placeholder="e.g. C:\path\to\youtube-cookies.txt"
+                  className="w-full rounded border border-border bg-background px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-primary font-mono"
+                />
+                <span className="text-[10px] text-muted-foreground">
+                  Alternative if browser-reading fails. Use a browser extension (e.g. <i>"Get cookies.txt LOCALLY"</i>) to export cookies and paste the file path here.
+                </span>
               </div>
             </div>
           </div>

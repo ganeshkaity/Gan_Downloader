@@ -228,8 +228,20 @@ export default function InstagramDownloaderView() {
                 onChange={(e) => setSelectedFormat(e.target.value)}
                 className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-pink-500"
               >
-                <option value="best">Best Quality Media (Merged MP4)</option>
-                <option value="mp3">Extract Audio Only (MP3)</option>
+                <optgroup label="Video">
+                  <option value="best">Best Quality (Default)</option>
+                  <option value="mp4_2160p">MP4 4K (2160p)</option>
+                  <option value="mp4_1440p">MP4 2K (1440p)</option>
+                  <option value="mp4_1080p">MP4 1080p</option>
+                  <option value="mp4_720p">MP4 720p</option>
+                  <option value="mp4_480p">MP4 480p</option>
+                </optgroup>
+                <optgroup label="Audio">
+                  <option value="mp3_320">MP3 320kbps (Best)</option>
+                  <option value="mp3_128">MP3 128kbps (Standard)</option>
+                  <option value="m4a">M4A (AAC Audio)</option>
+                  <option value="wav">WAV (Lossless Audio)</option>
+                </optgroup>
               </select>
             </div>
 

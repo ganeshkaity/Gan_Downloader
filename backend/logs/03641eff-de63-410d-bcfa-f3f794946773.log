@@ -1,0 +1,23 @@
+2026-07-14T23:17:53.438Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=2eliQ_KR8yA
+2026-07-14T23:17:53.440Z [STDOUT] [youtube] 2eliQ_KR8yA: Downloading webpage
+2026-07-14T23:17:57.486Z [STDERR] WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+2026-07-14T23:17:57.496Z [STDOUT] [youtube] 2eliQ_KR8yA: Downloading android vr player API JSON
+2026-07-14T23:17:58.171Z [STDOUT] [info] 2eliQ_KR8yA: Downloading 1 format(s): 251
+2026-07-14T23:17:58.192Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-14T23:17:58.398Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\KHAAB  AKHIL  PARMISH VERMA   PUNJABI SONG 2025  CROWN RECORDS  LATEST PUNJABI 2025 .webm
+2026-07-14T23:17:58.404Z [STDOUT] [download]   0.0% of    3.63MiB at  119.92KiB/s ETA 00:31
+2026-07-14T23:17:58.406Z [STDOUT] [download]   0.1% of    3.63MiB at  188.41KiB/s ETA 00:19
+2026-07-14T23:17:58.410Z [STDOUT] [download]   0.2% of    3.63MiB at  358.19KiB/s ETA 00:10
+2026-07-14T23:17:58.411Z [STDOUT] [download]   0.4% of    3.63MiB at  708.78KiB/s ETA 00:05
+2026-07-14T23:17:58.414Z [STDOUT] [download]   0.8% of    3.63MiB at    1.34MiB/s ETA 00:02
+2026-07-14T23:17:58.447Z [STDOUT] [download]   1.7% of    3.63MiB at    1.08MiB/s ETA 00:03
+2026-07-14T23:17:58.497Z [STDOUT] [download]   3.4% of    3.63MiB at    1.16MiB/s ETA 00:03
+2026-07-14T23:17:58.543Z [STDOUT] [download]   6.9% of    3.63MiB at    1.62MiB/s ETA 00:02
+2026-07-14T23:17:58.629Z [STDOUT] [download]  13.8% of    3.63MiB at    2.08MiB/s ETA 00:01
+2026-07-14T23:17:58.717Z [STDOUT] [download]  27.5% of    3.63MiB at    3.06MiB/s ETA 00:00
+2026-07-14T23:17:58.839Z [STDOUT] [download]  55.1% of    3.63MiB at    4.45MiB/s ETA 00:00
+2026-07-14T23:17:59.014Z [STDOUT] [download] 100.0% of    3.63MiB at    5.81MiB/s ETA 00:00
+2026-07-14T23:17:59.027Z [STDOUT] [download] 100% of    3.63MiB in 00:00:00 at 4.50MiB/s
+2026-07-14T23:17:59.582Z [STDOUT] [ExtractAudio] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\KHAAB  AKHIL  PARMISH VERMA   PUNJABI SONG 2025  CROWN RECORDS  LATEST PUNJABI 2025 .mp3
+2026-07-14T23:18:06.613Z [STDOUT] Deleting original file d:\my workspace\Personal_Tools\Gan_Downloader\downloads\KHAAB  AKHIL  PARMISH VERMA   PUNJABI SONG 2025  CROWN RECORDS  LATEST PUNJABI 2025 .webm (pass -k to keep)
+2026-07-14T23:18:06.625Z [STDOUT] [EmbedSubtitle] Subtitles can only be embedded in mp4, mov, m4a, webm, mkv, mka files

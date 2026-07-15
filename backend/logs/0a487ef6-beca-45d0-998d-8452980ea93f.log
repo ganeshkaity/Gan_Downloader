@@ -1,0 +1,22 @@
+2026-07-14T22:53:41.782Z [STDERR] WARNING: ffmpeg-location ffmpeg does not exist! Continuing without ffmpeg
+2026-07-14T22:53:41.948Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=zpsVpnvFfZQ
+2026-07-14T22:53:41.949Z [STDOUT] [youtube] zpsVpnvFfZQ: Downloading webpage
+2026-07-14T22:53:47.428Z [STDERR] WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+2026-07-14T22:53:47.442Z [STDOUT] [youtube] zpsVpnvFfZQ: Downloading android vr player API JSON
+2026-07-14T22:53:48.796Z [STDOUT] [info] zpsVpnvFfZQ: Downloading 1 format(s): 251
+2026-07-14T22:53:48.879Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-14T22:53:49.249Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\'Chittiyaan Kalaiyaan' FULL VIDEO SONG  Roy  Meet Bros Anjjan, Kanika Kapoor  T-SERIES.webm
+2026-07-14T22:53:49.252Z [STDOUT] [download]   0.0% of    3.19MiB at   88.33KiB/s ETA 00:37
+2026-07-14T22:53:49.258Z [STDOUT] [download]   0.1% of    3.19MiB at  167.08KiB/s ETA 00:19
+2026-07-14T22:53:49.263Z [STDOUT] [download]   0.2% of    3.19MiB at  339.47KiB/s ETA 00:09
+2026-07-14T22:53:49.276Z [STDOUT] [download]   0.5% of    3.19MiB at  711.57KiB/s ETA 00:04
+2026-07-14T22:53:49.277Z [STDOUT] [download]   0.9% of    3.19MiB at    1.15MiB/s ETA 00:02
+2026-07-14T22:53:49.338Z [STDOUT] [download]   1.9% of    3.19MiB at  626.92KiB/s ETA 00:05
+2026-07-14T22:53:49.441Z [STDOUT] [download]   3.9% of    3.19MiB at  625.54KiB/s ETA 00:05
+2026-07-14T22:53:49.546Z [STDOUT] [download]   7.8% of    3.19MiB at  827.31KiB/s ETA 00:03
+2026-07-14T22:53:49.772Z [STDOUT] [download]  15.7% of    3.19MiB at  955.63KiB/s ETA 00:02
+2026-07-14T22:53:50.139Z [STDOUT] [download]  31.3% of    3.19MiB at    1.11MiB/s ETA 00:01
+2026-07-14T22:53:50.756Z [STDOUT] [download]  62.7% of    3.19MiB at    1.32MiB/s ETA 00:00
+2026-07-14T22:53:51.414Z [STDOUT] [download] 100.0% of    3.19MiB at    1.47MiB/s ETA 00:00
+2026-07-14T22:53:51.424Z [STDOUT] [download] 100% of    3.19MiB in 00:00:02 at 1.30MiB/s
+2026-07-14T22:53:51.462Z [STDERR] ERROR: Postprocessing: ffprobe and ffmpeg not found. Please install or provide the path using --ffmpeg-location

@@ -1,0 +1,26 @@
+2026-07-14T22:53:53.624Z [STDERR] WARNING: ffmpeg-location ffmpeg does not exist! Continuing without ffmpeg
+2026-07-14T22:53:53.893Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=JFcgOboQZ08
+2026-07-14T22:53:53.893Z [STDOUT] [youtube] JFcgOboQZ08: Downloading webpage
+2026-07-14T22:53:55.391Z [STDERR] WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+2026-07-14T22:53:55.410Z [STDOUT] [youtube] JFcgOboQZ08: Downloading android vr player API JSON
+2026-07-14T22:53:56.256Z [STDOUT] [info] JFcgOboQZ08: Downloading 1 format(s): 251
+2026-07-14T22:53:56.284Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-14T22:53:56.974Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\DILBAR Lyrical  Satyameva Jayate John Abraham, Nora Fatehi,Tanishk B, Neha Kakkar,Dhvani, Ikka.webm
+2026-07-14T22:53:56.975Z [STDOUT] [download]   0.0% of    3.15MiB at  578.37KiB/s ETA 00:05
+2026-07-14T22:53:56.977Z [STDOUT] [download]   0.1% of    3.15MiB at  917.06KiB/s ETA 00:03
+2026-07-14T22:53:56.979Z [STDOUT] [download]   0.2% of    3.15MiB at    1.03MiB/s ETA 00:03
+2026-07-14T22:53:56.989Z [STDOUT] [download]   0.5% of    3.15MiB at    1.91MiB/s ETA 00:01
+2026-07-14T22:53:56.992Z [STDOUT] [download]   1.0% of    3.15MiB at    1.55MiB/s ETA 00:02
+2026-07-14T22:53:57.274Z [STDOUT] [download]   2.0% of    3.15MiB at  208.98KiB/s ETA 00:15
+2026-07-14T22:53:57.325Z [STDOUT] [download]   3.9% of    3.15MiB at  360.25KiB/s ETA 00:08
+2026-07-14T22:53:57.641Z [STDOUT] [download]   7.9% of    3.15MiB at  381.30KiB/s ETA 00:07
+2026-07-14T22:53:57.959Z [STDOUT] [download]  15.9% of    3.15MiB at  518.34KiB/s ETA 00:05
+2026-07-14T22:53:59.811Z [STDOUT] [download]  31.8% of    3.15MiB at  360.49KiB/s ETA 00:06
+2026-07-14T22:54:00.708Z [STDOUT] [download]  40.3% of    3.15MiB at  347.82KiB/s ETA 00:05
+2026-07-14T22:54:02.038Z [STDOUT] [download]  49.9% of    3.15MiB at  317.27KiB/s ETA 00:05
+2026-07-14T22:54:02.308Z [STDOUT] [download]  57.1% of    3.15MiB at  344.62KiB/s ETA 00:04
+2026-07-14T22:54:03.046Z [STDOUT] [download]  71.4% of    3.15MiB at  378.96KiB/s ETA 00:02
+2026-07-14T22:54:03.759Z [STDOUT] [download]  90.9% of    3.15MiB at  431.60KiB/s ETA 00:00
+2026-07-14T22:54:04.139Z [STDOUT] [download] 100.0% of    3.15MiB at  455.27KiB/s ETA 00:00
+2026-07-14T22:54:04.140Z [STDOUT] [download] 100% of    3.15MiB in 00:00:07 at 412.88KiB/s
+2026-07-14T22:54:04.229Z [STDERR] ERROR: Postprocessing: ffprobe and ffmpeg not found. Please install or provide the path using --ffmpeg-location

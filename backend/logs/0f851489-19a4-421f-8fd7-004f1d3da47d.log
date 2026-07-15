@@ -1,0 +1,23 @@
+2026-07-14T23:17:32.161Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=8WWv5_k8D14
+2026-07-14T23:17:32.163Z [STDOUT] [youtube] 8WWv5_k8D14: Downloading webpage
+2026-07-14T23:17:33.630Z [STDERR] WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+2026-07-14T23:17:33.642Z [STDOUT] [youtube] 8WWv5_k8D14: Downloading android vr player API JSON
+2026-07-14T23:17:34.314Z [STDOUT] [info] 8WWv5_k8D14: Downloading 1 format(s): 251
+2026-07-14T23:17:34.359Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-14T23:17:34.608Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\8 Parche  Baani Sandhu  Gur Sidhu  Gurneet Dosanjh  Punjabi Song  Ishtar Punjabi #punjabisong.webm
+2026-07-14T23:17:34.610Z [STDOUT] [download]   0.0% of    3.56MiB at  375.26KiB/s ETA 00:09
+2026-07-14T23:17:34.612Z [STDOUT] [download]   0.1% of    3.56MiB at  644.32KiB/s ETA 00:05
+2026-07-14T23:17:34.613Z [STDOUT] [download]   0.2% of    3.56MiB at  991.29KiB/s ETA 00:03
+2026-07-14T23:17:34.614Z [STDOUT] [download]   0.4% of    3.56MiB at    1.78MiB/s ETA 00:01
+2026-07-14T23:17:34.648Z [STDOUT] [download]   0.9% of    3.56MiB at  742.88KiB/s ETA 00:04
+2026-07-14T23:17:34.675Z [STDOUT] [download]   1.7% of    3.56MiB at  921.79KiB/s ETA 00:03
+2026-07-14T23:17:34.728Z [STDOUT] [download]   3.5% of    3.56MiB at    1.02MiB/s ETA 00:03
+2026-07-14T23:17:34.774Z [STDOUT] [download]   7.0% of    3.56MiB at    1.49MiB/s ETA 00:02
+2026-07-14T23:17:34.864Z [STDOUT] [download]  14.0% of    3.56MiB at    1.93MiB/s ETA 00:01
+2026-07-14T23:17:35.007Z [STDOUT] [download]  28.1% of    3.56MiB at    2.50MiB/s ETA 00:01
+2026-07-14T23:17:35.241Z [STDOUT] [download]  56.2% of    3.56MiB at    3.15MiB/s ETA 00:00
+2026-07-14T23:17:35.623Z [STDOUT] [download] 100.0% of    3.56MiB at    3.50MiB/s ETA 00:00
+2026-07-14T23:17:35.697Z [STDOUT] [download] 100% of    3.56MiB in 00:00:01 at 2.73MiB/s
+2026-07-14T23:17:38.691Z [STDOUT] [ExtractAudio] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\8 Parche  Baani Sandhu  Gur Sidhu  Gurneet Dosanjh  Punjabi Song  Ishtar Punjabi #punjabisong.mp3
+2026-07-14T23:17:51.827Z [STDOUT] Deleting original file d:\my workspace\Personal_Tools\Gan_Downloader\downloads\8 Parche  Baani Sandhu  Gur Sidhu  Gurneet Dosanjh  Punjabi Song  Ishtar Punjabi #punjabisong.webm (pass -k to keep)
+2026-07-14T23:17:51.830Z [STDOUT] [EmbedSubtitle] Subtitles can only be embedded in mp4, mov, m4a, webm, mkv, mka files

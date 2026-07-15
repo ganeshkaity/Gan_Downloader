@@ -1,0 +1,11 @@
+2026-07-14T23:27:58.185Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=bzW9fmwcmG4
+2026-07-14T23:27:58.185Z [STDOUT] [youtube] bzW9fmwcmG4: Downloading webpage
+2026-07-14T23:27:59.289Z [STDERR] WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+2026-07-14T23:27:59.302Z [STDOUT] [youtube] bzW9fmwcmG4: Downloading android vr player API JSON
+2026-07-14T23:27:59.903Z [STDOUT] [info] bzW9fmwcmG4: Downloading 1 format(s): 251
+2026-07-14T23:27:59.921Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-14T23:27:59.937Z [STDOUT] [download] d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Daru Badnaam  Kamal Kahlon & Param Singh  Official Video  Pratik Studio  Latest Punjabi Songs.webm has already been downloaded
+2026-07-14T23:27:59.939Z [STDOUT] [download] 100% of    3.84MiB
+2026-07-14T23:28:00.187Z [STDOUT] [ExtractAudio] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Daru Badnaam  Kamal Kahlon & Param Singh  Official Video  Pratik Studio  Latest Punjabi Songs.mp3
+2026-07-14T23:28:07.823Z [STDOUT] Deleting original file d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Daru Badnaam  Kamal Kahlon & Param Singh  Official Video  Pratik Studio  Latest Punjabi Songs.webm (pass -k to keep)
+2026-07-14T23:28:07.832Z [STDOUT] [EmbedSubtitle] Subtitles can only be embedded in mp4, mov, m4a, webm, mkv, mka files

@@ -1,0 +1,26 @@
+2026-07-15T00:25:09.360Z [STDOUT] [youtube] Extracting URL: https://www.youtube.com/watch?v=fyno2GRGgVg
+2026-07-15T00:25:09.453Z [STDOUT] [youtube] fyno2GRGgVg: Downloading webpage
+2026-07-15T00:25:11.360Z [STDOUT] [youtube] fyno2GRGgVg: Downloading tv downgraded player API JSON
+2026-07-15T00:25:12.262Z [STDOUT] [youtube] fyno2GRGgVg: Downloading player 9b33d56a-main
+2026-07-15T00:25:13.305Z [STDOUT] [youtube] [jsc:node] Solving JS challenges using node
+2026-07-15T00:25:17.191Z [STDOUT] [youtube] fyno2GRGgVg: Downloading m3u8 information
+2026-07-15T00:25:18.039Z [STDOUT] [info] fyno2GRGgVg: Downloading 1 format(s): 251
+2026-07-15T00:25:18.086Z [STDOUT] [info] There are no subtitles for the requested languages
+2026-07-15T00:25:18.460Z [STDOUT] [download] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Tumhi Ho Bandhu - 8K4K Music Video  Saif Ai Khan, Deepika Padukone, Diana  Pritam  Cocktail.webm
+2026-07-15T00:25:18.462Z [STDOUT] [download]   0.0% of    4.65MiB at  126.35KiB/s ETA 00:37
+2026-07-15T00:25:18.469Z [STDOUT] [download]   0.1% of    4.65MiB at  348.79KiB/s ETA 00:13
+2026-07-15T00:25:18.469Z [STDOUT] [download]   0.1% of    4.65MiB at  778.87KiB/s ETA 00:06
+2026-07-15T00:25:18.469Z [STDOUT] [download]   0.3% of    4.65MiB at  906.84KiB/s ETA 00:05
+2026-07-15T00:25:18.535Z [STDOUT] [download]   0.7% of    4.65MiB at  376.33KiB/s ETA 00:12
+2026-07-15T00:25:18.558Z [STDOUT] [download]   1.3% of    4.65MiB at  598.21KiB/s ETA 00:07
+2026-07-15T00:25:18.676Z [STDOUT] [download]   2.7% of    4.65MiB at  568.73KiB/s ETA 00:08
+2026-07-15T00:25:18.826Z [STDOUT] [download]   5.4% of    4.65MiB at  682.76KiB/s ETA 00:06
+2026-07-15T00:25:19.039Z [STDOUT] [download]  10.7% of    4.65MiB at  871.47KiB/s ETA 00:04
+2026-07-15T00:25:19.187Z [STDOUT] [download]  21.5% of    4.65MiB at    1.36MiB/s ETA 00:02
+2026-07-15T00:25:19.470Z [STDOUT] [download]  43.0% of    4.65MiB at    1.96MiB/s ETA 00:01
+2026-07-15T00:25:19.976Z [STDOUT] [download]  85.9% of    4.65MiB at    2.62MiB/s ETA 00:00
+2026-07-15T00:25:20.111Z [STDOUT] [download] 100.0% of    4.65MiB at    2.81MiB/s ETA 00:00
+2026-07-15T00:25:20.157Z [STDOUT] [download] 100% of    4.65MiB in 00:00:01 at 2.33MiB/s
+2026-07-15T00:25:20.920Z [STDOUT] [ExtractAudio] Destination: d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Tumhi Ho Bandhu - 8K4K Music Video  Saif Ai Khan, Deepika Padukone, Diana  Pritam  Cocktail.mp3
+2026-07-15T00:25:39.543Z [STDOUT] Deleting original file d:\my workspace\Personal_Tools\Gan_Downloader\downloads\Tumhi Ho Bandhu - 8K4K Music Video  Saif Ai Khan, Deepika Padukone, Diana  Pritam  Cocktail.webm (pass -k to keep)
+2026-07-15T00:25:39.559Z [STDOUT] [EmbedSubtitle] Subtitles can only be embedded in mp4, mov, m4a, webm, mkv, mka files
