@@ -1,10 +1,10 @@
 {
-  "downloadFolder": "d:\\my workspace\\Personal_Tools\\Gan_Downloader\\downloads",
+  "downloadFolder": "C:\\Users\\GANESH KAITY\\Downloads\\Gan_Downloader_Downloads",
   "defaultVideoQuality": "bestvideo+bestaudio/best",
   "defaultAudioQuality": "bestaudio/best",
   "theme": "dark",
-  "concurrentDownloads": 3,
-  "maxQueueSize": 50,
+  "concurrentDownloads": 10,
+  "maxQueueSize": 150,
   "autoRetry": true,
   "retryCount": 3,
   "duplicateHandling": "ask",

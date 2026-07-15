@@ -6,6 +6,11 @@ import ClientBootstrap from "@/components/client-bootstrap";
 export const metadata: Metadata = {
   title: "Gan Downloader",
   description: "Modern, local-first media downloader dashboard",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({

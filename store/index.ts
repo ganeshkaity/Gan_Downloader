@@ -25,7 +25,7 @@ interface AppState {
   fetchHealth: () => Promise<void>;
   
   // Queue operations
-  addToQueue: (url: string, format?: string, platform?: string) => Promise<void>;
+  addToQueue: (url: string, format?: string, platform?: string, embedMetadata?: boolean, embedThumbnail?: boolean, subLangs?: string[]) => Promise<void>;
   cancelDownload: (id: string) => Promise<void>;
   retryDownload: (id: string) => Promise<void>;
   deleteQueueItem: (id: string) => Promise<void>;
@@ -154,12 +154,12 @@ export const useAppStore = create<AppState>((set, get) => ({
     }
   },
 
-  addToQueue: async (url, format, platform) => {
+  addToQueue: async (url, format, platform, embedMetadata, embedThumbnail, subLangs) => {
     try {
       await fetch(`${BACKEND_URL}/download`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, format, platform })
+        body: JSON.stringify({ url, format, platform, embedMetadata, embedThumbnail, subLangs })
       });
       // Auto-expand the console panel
       set({ consoleOpen: true });

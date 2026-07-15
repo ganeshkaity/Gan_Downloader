@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useAppStore } from '@/store';
 import DuplicateDialog from './duplicate-dialog';
-import { Download, Globe, Copy, Check, ExternalLink, HelpCircle, AlertCircle, RefreshCw, Music, Image } from 'lucide-react';
+import { Download, Globe, Copy, Check, ExternalLink, HelpCircle, AlertCircle, RefreshCw, Music, Image as ImageIcon } from 'lucide-react';
 import { YoutubeIcon } from './icons';
 
 interface FormatItem {
@@ -26,24 +26,19 @@ interface MediaMetadata {
   subtitles: string[];
 }
 
-// ── Skeleton shimmer card shown while analyzing ──────────────────────────────
 function AnalyzingSkeleton() {
   return (
     <div className="rounded-xl border border-border bg-card shadow-xs overflow-hidden divide-y divide-border animate-pulse">
-      {/* Top row */}
       <div className="p-5 flex flex-col sm:flex-row gap-5">
-        {/* Thumbnail skeleton */}
         <div className="relative aspect-video sm:w-48 bg-secondary/60 rounded-lg shrink-0 overflow-hidden border border-border">
           <div
             className="absolute inset-0"
             style={{
-              background:
-                'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%)',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%)',
               backgroundSize: '200% 100%',
               animation: 'skeleton-sweep 1.6s ease-in-out infinite',
             }}
           />
-          {/* Play icon ghost */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="h-10 w-10 rounded-full bg-white/5 flex items-center justify-center">
               <div className="h-5 w-5 rounded bg-white/10" />
@@ -51,16 +46,12 @@ function AnalyzingSkeleton() {
           </div>
         </div>
 
-        {/* Text skeleton */}
         <div className="flex-1 space-y-4 min-w-0 py-1">
-          {/* Title lines */}
           <div className="space-y-2">
             <div className="h-4 bg-secondary/70 rounded w-4/5" />
             <div className="h-4 bg-secondary/50 rounded w-2/3" />
             <div className="h-3 bg-secondary/40 rounded w-1/3 mt-3" />
           </div>
-
-          {/* Stats row */}
           <div className="grid grid-cols-3 gap-3">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="bg-secondary/40 rounded p-1.5 space-y-1.5">
@@ -72,7 +63,6 @@ function AnalyzingSkeleton() {
         </div>
       </div>
 
-      {/* Bottom section skeleton */}
       <div className="p-5 space-y-4">
         <div className="space-y-2">
           <div className="h-3 bg-secondary/50 rounded w-28" />
@@ -84,7 +74,6 @@ function AnalyzingSkeleton() {
           <div className="h-9 w-9 bg-secondary/40 rounded" />
         </div>
 
-        {/* Status label */}
         <div className="flex items-center gap-2 text-xs text-muted-foreground/70 pt-1">
           <RefreshCw className="h-3 w-3 animate-spin" />
           <span>Fetching media information…</span>
@@ -101,26 +90,23 @@ function AnalyzingSkeleton() {
   );
 }
 
-export default function SingleDownloaderView() {
+export default function YTShortsDownloaderView() {
   const { addToQueue, health, connected } = useAppStore();
   const [url, setUrl] = useState('');
   const [analyzing, setAnalyzing] = useState(false);
   const [metadata, setMetadata] = useState<MediaMetadata | null>(null);
-  const [selectedFormat, setSelectedFormat] = useState<string>('best');
+  const [selectedFormat, setSelectedFormat] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [copiedTitle, setCopiedTitle] = useState(false);
   const [duplicateInfo, setDuplicateInfo] = useState<any | null>(null);
   const [showDuplicateDialog, setShowDuplicateDialog] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
-  // Audio embedding options
+  // Audio embedding / metadata options
   const [embedMetadata, setEmbedMetadata] = useState(true);
   const [embedThumbnail, setEmbedThumbnail] = useState(true);
-  const [showDynamic, setShowDynamic] = useState(false);
 
   const isAudioFormat = () => {
-    if (['mp3_320', 'mp3_128', 'm4a', 'wav'].includes(selectedFormat)) {
-      return true;
-    }
     if (!metadata || !selectedFormat) return false;
     const fmt = metadata.formats.find(f => f.formatId === selectedFormat);
     if (!fmt) return false;
@@ -149,13 +135,14 @@ export default function SingleDownloaderView() {
 
       const data = await res.json();
       setMetadata(data.metadata);
-      if (showDynamic && data.metadata.formats && data.metadata.formats.length > 0) {
+      
+      if (data.metadata.formats && data.metadata.formats.length > 0) {
         setSelectedFormat(data.metadata.formats[0].formatId);
       } else {
-        setSelectedFormat('best'); // Reset default to best quality
+        setSelectedFormat('best');
       }
     } catch (e: any) {
-      setError(e?.message || 'Failed to extract media information.');
+      setError(e?.message || 'Failed to extract YouTube Shorts information.');
     } finally {
       setAnalyzing(false);
     }
@@ -172,7 +159,6 @@ export default function SingleDownloaderView() {
     if (!metadata) return;
 
     try {
-      // Check for duplicates
       const res = await fetch('http://localhost:3001/duplicate-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -184,12 +170,10 @@ export default function SingleDownloaderView() {
         setDuplicateInfo(data.record);
         setShowDuplicateDialog(true);
       } else {
-        // No duplicate, start download immediately
         triggerDownload();
       }
     } catch (e) {
       console.error(e);
-      // Fallback: trigger download anyway if check fails
       triggerDownload();
     }
   };
@@ -197,12 +181,14 @@ export default function SingleDownloaderView() {
   const triggerDownload = async (duplicateAction?: string, customRename?: string) => {
     if (!metadata) return;
 
-    // Pass audio embedding options to queue
-    await addToQueue(metadata.webpage_url, selectedFormat, 'youtube', embedMetadata, embedThumbnail);
-    
-    // Only close dialogs, do NOT reset metadata or url
-    setShowDuplicateDialog(false);
-    setDuplicateInfo(null);
+    setDownloading(true);
+    try {
+      await addToQueue(metadata.webpage_url, selectedFormat, 'youtube', embedMetadata, embedThumbnail);
+    } finally {
+      setDownloading(false);
+      setShowDuplicateDialog(false);
+      setDuplicateInfo(null);
+    }
   };
 
   const handleDuplicateResolve = (action: 'skip' | 'download_anyway' | 'rename' | 'overwrite', renameVal?: string) => {
@@ -211,8 +197,6 @@ export default function SingleDownloaderView() {
       setDuplicateInfo(null);
       return;
     }
-    
-    // Otherwise proceed with download
     triggerDownload(action, renameVal);
   };
 
@@ -240,10 +224,9 @@ export default function SingleDownloaderView() {
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
-      {/* Title */}
       <div>
-        <h2 className="text-xl font-bold tracking-tight">Single Video Downloader</h2>
-        <p className="text-sm text-muted-foreground">Scrape formats and download single videos from YouTube, Twitter/X, and more.</p>
+        <h2 className="text-xl font-bold tracking-tight">YouTube Shorts Downloader</h2>
+        <p className="text-sm text-muted-foreground">Scrape available format tracks dynamically and download YouTube Shorts or videos.</p>
       </div>
 
       {/* URL Input Form */}
@@ -254,13 +237,11 @@ export default function SingleDownloaderView() {
               type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="Paste video URL here (e.g. youtube.com/watch?v=...)"
+              placeholder="Paste YouTube Shorts or Video URL here..."
               className="w-full rounded-md border border-border bg-background pl-3 pr-10 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
               disabled={analyzing}
             />
-            {url.includes('youtube.com') && (
-              <YoutubeIcon className="absolute right-3 top-3 h-4 w-4 text-red-500" />
-            )}
+            <YoutubeIcon className="absolute right-3 top-3 h-4 w-4 text-red-500" />
           </div>
           <button
             type="submit"
@@ -336,7 +317,7 @@ export default function SingleDownloaderView() {
                 </div>
                 <div className="bg-secondary/40 rounded p-1.5 text-center col-span-2 sm:col-span-1">
                   <div className="font-semibold text-foreground text-sm capitalize">{metadata.formats[0]?.ext || 'mp4'}</div>
-                  <div>Format</div>
+                  <div>Default Ext</div>
                 </div>
               </div>
             </div>
@@ -344,63 +325,22 @@ export default function SingleDownloaderView() {
 
           {/* Download Chooser Form */}
           <div className="p-5 space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <label htmlFor="format-select" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Output Quality</label>
-              
-              {/* Checkbox to toggle dynamic formats */}
-              <label className="flex items-center gap-1.5 cursor-pointer text-xs text-muted-foreground hover:text-foreground select-none">
-                <input
-                  type="checkbox"
-                  checked={showDynamic}
-                  onChange={(e) => {
-                    const checked = e.target.checked;
-                    setShowDynamic(checked);
-                    if (checked && metadata.formats && metadata.formats.length > 0) {
-                      setSelectedFormat(metadata.formats[0].formatId);
-                    } else {
-                      setSelectedFormat('best');
-                    }
-                  }}
-                  className="rounded border-zinc-700 bg-zinc-900 text-primary focus:ring-primary focus:ring-offset-zinc-950 h-3.5 w-3.5 cursor-pointer"
-                />
-                Show dynamically queried formats
-              </label>
-            </div>
-
             <div className="space-y-2">
+              <label htmlFor="format-select" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Dynamically Queried Format</label>
               <select
                 id="format-select"
                 value={selectedFormat}
                 onChange={(e) => setSelectedFormat(e.target.value)}
                 className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
               >
-                {showDynamic ? (
-                  metadata.formats && metadata.formats.length > 0 ? (
-                    metadata.formats.map((fmt) => (
-                      <option key={fmt.formatId} value={fmt.formatId}>
-                        {fmt.resolution} ({fmt.ext}) - {fmt.note || 'No note'} {fmt.filesize ? `(${(fmt.filesize / (1024 * 1024)).toFixed(1)} MB)` : ''}
-                      </option>
-                    ))
-                  ) : (
-                    <option value="best">Best Quality (Default)</option>
-                  )
+                {metadata.formats && metadata.formats.length > 0 ? (
+                  metadata.formats.map((fmt) => (
+                    <option key={fmt.formatId} value={fmt.formatId}>
+                      {fmt.resolution} ({fmt.ext}) - {fmt.note || 'No note'} {formatFilesize(fmt.filesize)}
+                    </option>
+                  ))
                 ) : (
-                  <>
-                    <optgroup label="Video">
-                      <option value="best">Best Quality (Default)</option>
-                      <option value="mp4_2160p">MP4 4K (2160p)</option>
-                      <option value="mp4_1440p">MP4 2K (1440p)</option>
-                      <option value="mp4_1080p">MP4 1080p</option>
-                      <option value="mp4_720p">MP4 720p</option>
-                      <option value="mp4_480p">MP4 480p</option>
-                    </optgroup>
-                    <optgroup label="Audio">
-                      <option value="mp3_320">MP3 320kbps (Best)</option>
-                      <option value="mp3_128">MP3 128kbps (Standard)</option>
-                      <option value="m4a">M4A (AAC Audio)</option>
-                      <option value="wav">WAV (Lossless Audio)</option>
-                    </optgroup>
-                  </>
+                  <option value="best">Best Quality (Default)</option>
                 )}
               </select>
             </div>
@@ -435,7 +375,7 @@ export default function SingleDownloaderView() {
                       className="peer h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary focus:ring-offset-0 cursor-pointer"
                     />
                   </div>
-                  <Image className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <ImageIcon className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
                   <span className="text-foreground/80 group-hover:text-foreground transition-colors">
                     Thumbnail
                     <span className="text-muted-foreground ml-1">(cover art as JPG)</span>
@@ -461,10 +401,14 @@ export default function SingleDownloaderView() {
             <div className="flex items-center gap-2 pt-2">
               <button
                 onClick={checkAndDownload}
-                disabled={!!isInternetDisconnected}
+                disabled={!!isInternetDisconnected || downloading}
                 className="flex items-center gap-2 rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold hover:bg-primary/95 shadow-xs disabled:opacity-40 transition-colors"
               >
-                <Download className="h-4 w-4" />
+                {downloading ? (
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
                 Add to Download Queue
               </button>
 

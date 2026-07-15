@@ -11,7 +11,8 @@ import {
   Trash2, 
   Globe, 
   ListPlus,
-  AlertCircle 
+  AlertCircle,
+  Upload
 } from 'lucide-react';
 import { YoutubeIcon, InstagramIcon } from './icons';
 
@@ -20,6 +21,20 @@ export default function MultipleDownloaderView() {
   const [urlsInput, setUrlsInput] = useState('');
   const [selectedFormat, setSelectedFormat] = useState('best');
   const [adding, setAdding] = useState(false);
+
+  const handleTxtUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      if (text) {
+        setUrlsInput(text);
+      }
+    };
+    reader.readAsText(file);
+  };
 
   const handleBulkAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,7 +99,19 @@ export default function MultipleDownloaderView() {
           <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
             <form onSubmit={handleBulkAdd} className="space-y-4">
               <div className="space-y-1.5">
-                <label htmlFor="urls-textarea" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Paste URLs (one per line)</label>
+                <div className="flex justify-between items-center mb-1">
+                  <label htmlFor="urls-textarea" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Paste URLs (one per line)</label>
+                  <label className="text-[10px] bg-secondary hover:bg-secondary/80 text-foreground px-2.5 py-1 rounded cursor-pointer border border-border flex items-center gap-1 transition-colors select-none">
+                    <Upload className="h-3 w-3" />
+                    <span>Upload .txt</span>
+                    <input
+                      type="file"
+                      accept=".txt"
+                      className="hidden"
+                      onChange={handleTxtUpload}
+                    />
+                  </label>
+                </div>
                 <textarea
                   id="urls-textarea"
                   rows={8}

@@ -48,3 +48,14 @@ next-env.d.ts
 *.wav
 *.mkv
 *.mov
+
+#logs
+/backend/logs
+# cookies
+*.txt
+
+#bat
+*.bat
+
+#ytdlp-cookies
+/backend/ytdlp-cookies.txt

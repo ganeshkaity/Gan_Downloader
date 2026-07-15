@@ -19,6 +19,9 @@ export interface QueueItem {
   fileName: string;
   downloadPath: string;
   format: string;
+  embedMetadata?: boolean;
+  embedThumbnail?: boolean;
+  subLangs?: string[];
   error?: string;
   logs: string[];
   addedAt: string;
@@ -56,7 +59,7 @@ export class QueueService {
     return this.queue.find(item => item.id === id) || null;
   }
 
-  public static async addToQueue(url: string, platform: string, options: { format?: string; title?: string } = {}): Promise<QueueItem> {
+  public static async addToQueue(url: string, platform: string, options: { format?: string; title?: string; embedMetadata?: boolean; embedThumbnail?: boolean; subLangs?: string[] } = {}): Promise<QueueItem> {
     const settings = SettingsService.getSettings();
     
     // Auto detect platform if not provided
@@ -88,6 +91,9 @@ export class QueueService {
       fileName: '',
       downloadPath: settings.downloadFolder,
       format: options.format || settings.defaultVideoQuality,
+      embedMetadata: options.embedMetadata,
+      embedThumbnail: options.embedThumbnail,
+      subLangs: options.subLangs,
       logs: ['Added to queue.'],
       addedAt: new Date().toISOString()
     };
@@ -255,15 +261,45 @@ export class QueueService {
       // Add format configurations
       const format = item.format || 'best';
       const hasFfmpeg = !!settings.ffmpegPath;
+      const embedMeta = item.embedMetadata !== false;
+      const embedThumb = item.embedThumbnail !== false;
       
-      if (format === 'mp3_320') {
+      if (format === 'thumbnail') {
+        args.push('--write-thumbnail', '--skip-download', '--convert-thumbnails', 'jpg', '-f', 'best');
+        args.push('--ppa', 'ThumbnailsConvertor:-vf scale=1280:-1 -qscale:v 4');
+      } else if (format === 'subtitle') {
+        const langs = (item.subLangs && item.subLangs.length > 0)
+          ? item.subLangs.join(',')
+          : 'all';
+        args.push('--write-subs', '--write-auto-subs', '--skip-download', '--sub-langs', langs, '-f', 'best');
+      } else if (format === 'mp3_320') {
         args.push('-f', 'bestaudio/best', '-x', '--audio-format', 'mp3', '--audio-quality', '0');
+        if (embedMeta) args.push('--embed-metadata');
+        if (embedThumb) {
+          args.push('--embed-thumbnail', '--convert-thumbnails', 'jpg');
+          args.push('--ppa', 'ThumbnailsConvertor:-vf scale=320:-1 -qscale:v 8');
+        }
       } else if (format === 'mp3_128') {
         args.push('-f', 'bestaudio/best', '-x', '--audio-format', 'mp3', '--audio-quality', '5');
+        if (embedMeta) args.push('--embed-metadata');
+        if (embedThumb) {
+          args.push('--embed-thumbnail', '--convert-thumbnails', 'jpg');
+          args.push('--ppa', 'ThumbnailsConvertor:-vf scale=320:-1 -qscale:v 8');
+        }
       } else if (format === 'm4a') {
         args.push('-f', 'bestaudio/best', '-x', '--audio-format', 'm4a');
+        if (embedMeta) args.push('--embed-metadata');
+        if (embedThumb) {
+          args.push('--embed-thumbnail', '--convert-thumbnails', 'jpg');
+          args.push('--ppa', 'ThumbnailsConvertor:-vf scale=320:-1 -qscale:v 8');
+        }
       } else if (format === 'wav') {
         args.push('-f', 'bestaudio/best', '-x', '--audio-format', 'wav');
+        if (embedMeta) args.push('--embed-metadata');
+        if (embedThumb) {
+          args.push('--embed-thumbnail', '--convert-thumbnails', 'jpg');
+          args.push('--ppa', 'ThumbnailsConvertor:-vf scale=320:-1 -qscale:v 8');
+        }
       } else if (format.startsWith('mp4_')) {
         const height = format.split('_')[1].replace('p', '');
         if (hasFfmpeg) {
@@ -285,7 +321,7 @@ export class QueueService {
       }
 
       // Add subtitle configurations if applicable
-      if (settings.subtitlePreferences) {
+      if (settings.subtitlePreferences && format !== 'thumbnail' && format !== 'subtitle') {
         args.push('--write-subs', '--sub-langs', settings.subtitlePreferences, '--embed-subs');
       }
 
@@ -405,8 +441,9 @@ export class QueueService {
             // Check if error is "Requested format is not available" - retry with universal fallback
             const hasFormatError = stderrAccumulator.includes('Requested format is not available') || item.logs.some(l => l.includes('Requested format is not available'));
             const alreadyFallback = item.logs.some(l => l.includes('[FALLBACK]'));
+            const isDataOnly = ['thumbnail', 'subtitle'].includes(item.format);
             
-            if (hasFormatError && !alreadyFallback) {
+            if (hasFormatError && !alreadyFallback && !isDataOnly) {
               item.logs.push('[FALLBACK] Requested format unavailable. Retrying with universal fallback format...');
               this.emitUpdate();
 
@@ -431,6 +468,11 @@ export class QueueService {
 
               if (isAudioFormat) {
                 fallbackArgs.push('-f', 'bestaudio/best', '-x', '--audio-format', 'mp3', '--audio-quality', '0');
+                if (embedMeta) fallbackArgs.push('--embed-metadata');
+                if (embedThumb) {
+                  fallbackArgs.push('--embed-thumbnail', '--convert-thumbnails', 'jpg');
+                  fallbackArgs.push('--ppa', 'ThumbnailsConvertor:-vf scale=320:-1 -qscale:v 8');
+                }
               } else {
                 // Simplest possible video fallback - no merge needed, just get what's available
                 fallbackArgs.push('-f', 'best');

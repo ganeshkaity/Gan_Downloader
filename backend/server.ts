@@ -99,7 +99,8 @@ route('/analyze', async (req, res) => {
           note: f.format_note || f.note || '',
           filesize: f.filesize || f.filesize_approx || null
         })).filter((f: any) => f.resolution !== 'multiple'),
-        subtitles: Object.keys(metadata.subtitles || {})
+        subtitles: Object.keys(metadata.subtitles || {}),
+        automaticCaptions: Object.keys(metadata.automatic_captions || {})
       },
       duplicate: duplicate ? {
         title: duplicate.title,
@@ -170,15 +171,70 @@ route('/playlist', async (req, res) => {
   }
 });
 
+// POST /search - Runs yt-dlp search
+route('/search', async (req, res) => {
+  const { query, limit = 20 } = req.body;
+  if (!query) {
+    return res.status(400).json({ error: 'Search query is required' });
+  }
+
+  try {
+    const settings = SettingsService.getSettings();
+    const searchUrl = `ytsearch${limit}:${query}`;
+    const args = [searchUrl, '--flat-playlist', '--dump-single-json', '--no-warnings'];
+    // Timeout so search doesn't hang forever
+    args.push('--socket-timeout', '30');
+    if (settings.ffmpegPath && settings.ffmpegPath !== 'ffmpeg') {
+      args.push('--ffmpeg-location', settings.ffmpegPath);
+    }
+    if (settings.cookiesFilePath && settings.cookiesFilePath.trim() !== '') {
+      args.push('--cookies', settings.cookiesFilePath.trim());
+    } else if (settings.cookieBrowser && settings.cookieBrowser !== 'none') {
+      args.push('--cookies-from-browser', settings.cookieBrowser);
+    }
+    
+    const child = spawn(settings.ytdlpPath, args);
+    let stdoutData = '';
+    let stderrData = '';
+
+    child.stdout.on('data', (data) => stdoutData += data.toString());
+    child.stderr.on('data', (data) => stderrData += data.toString());
+
+    child.on('close', (code) => {
+      if (code === 0) {
+        try {
+          const playlist = JSON.parse(stdoutData);
+          res.json({
+            success: true,
+            results: (playlist.entries || []).map((e: any) => ({
+              id: e.id,
+              title: e.title,
+              url: e.url || `https://www.youtube.com/watch?v=${e.id}`,
+              duration: e.duration || 0,
+              thumbnail: e.thumbnail || `https://i.ytimg.com/vi/${e.id}/mqdefault.jpg`
+            }))
+          });
+        } catch (e) {
+          res.status(500).json({ error: 'Failed to parse search metadata response' });
+        }
+      } else {
+        res.status(500).json({ error: stderrData.trim() || 'Failed to search YouTube' });
+      }
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error?.message || 'Search execution failed' });
+  }
+});
+
 // POST /download - Add single URL to active download queue
 route('/download', async (req, res) => {
-  const { url, format, title, platform } = req.body;
+  const { url, format, title, platform, embedMetadata, embedThumbnail, subLangs } = req.body;
   if (!url) {
     return res.status(400).json({ error: 'URL is required' });
   }
 
   try {
-    const item = await QueueService.addToQueue(url, platform || 'youtube', { format, title });
+    const item = await QueueService.addToQueue(url, platform || 'youtube', { format, title, embedMetadata, embedThumbnail, subLangs });
     res.json({ success: true, item });
   } catch (error: any) {
     res.status(500).json({ error: error?.message || 'Failed to add item to queue' });
@@ -187,7 +243,7 @@ route('/download', async (req, res) => {
 
 // POST /multiple - Add multiple URLs to queue
 route('/multiple', async (req, res) => {
-  const { urls, format } = req.body;
+  const { urls, format, embedMetadata, embedThumbnail } = req.body;
   if (!urls || !Array.isArray(urls) || urls.length === 0) {
     return res.status(400).json({ error: 'List of URLs is required' });
   }
@@ -196,7 +252,7 @@ route('/multiple', async (req, res) => {
     const items = [];
     for (const url of urls) {
       if (url.trim()) {
-        const item = await QueueService.addToQueue(url.trim(), 'youtube', { format });
+        const item = await QueueService.addToQueue(url.trim(), 'youtube', { format, embedMetadata, embedThumbnail });
         items.push(item);
       }
     }
@@ -208,13 +264,13 @@ route('/multiple', async (req, res) => {
 
 // POST /instagram - Wrapper for instagram downloader endpoint
 route('/instagram', async (req, res) => {
-  const { url, format, title } = req.body;
+  const { url, format, title, embedMetadata, embedThumbnail } = req.body;
   if (!url) {
     return res.status(400).json({ error: 'URL is required' });
   }
 
   try {
-    const item = await QueueService.addToQueue(url, 'instagram', { format, title });
+    const item = await QueueService.addToQueue(url, 'instagram', { format, title, embedMetadata, embedThumbnail });
     res.json({ success: true, item });
   } catch (error: any) {
     res.status(500).json({ error: error?.message || 'Failed to add Instagram item to queue' });

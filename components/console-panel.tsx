@@ -2,12 +2,12 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useAppStore } from '@/store';
-import { Terminal, Copy, Trash2, Check, ExternalLink, Activity, List } from 'lucide-react';
+import { Terminal, Copy, Trash2, Check, ExternalLink, Activity, List, Info } from 'lucide-react';
 
 export default function ConsolePanel() {
   const { queue, selectedQueueItemId, logMap, setSelectedQueueItemId } = useAppStore();
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<'raw' | 'simplified'>('raw');
+  const [activeTab, setActiveTab] = useState<'raw' | 'simplified' | 'details'>('raw');
   const terminalEndRef = useRef<HTMLDivElement>(null);
 
   // If no item is selected, find the first active downloading/analyzing item
@@ -40,6 +40,14 @@ export default function ConsolePanel() {
     });
   };
 
+  // Compute Details tab variables
+  const totalQueued = queue.filter(item => item.status === 'Queued').length;
+  const totalRemaining = queue.filter(item => ['Queued', 'Waiting', 'Analyzing', 'Downloading'].includes(item.status)).length;
+  const videosDownloaded = queue.filter(item => item.status === 'Completed').length;
+  const activeDownloads = queue.filter(item => item.status === 'Downloading');
+  const currentSpeed = activeDownloads.length > 0 ? activeDownloads[0].speed : '0 B/s';
+  const avgTime = activeDownloads.length > 0 ? activeDownloads[0].eta : '--:--';
+
   return (
     <div className="flex flex-col h-full rounded-xl border border-border bg-black shadow-lg overflow-hidden font-mono text-xs">
       {/* Console Header */}
@@ -58,6 +66,13 @@ export default function ConsolePanel() {
           >
             <Activity className="h-3.5 w-3.5" />
             <span>Simplified</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('details')}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded transition-colors ${activeTab === 'details' ? 'bg-zinc-800 text-zinc-100 font-medium' : 'text-zinc-400 hover:text-zinc-300 hover:bg-zinc-900'}`}
+          >
+            <Info className="h-3.5 w-3.5" />
+            <span>Details</span>
           </button>
 
           {activeItem && activeTab === 'raw' && (
@@ -223,6 +238,32 @@ export default function ConsolePanel() {
                 <p className="text-[10px]">Active items will appear here.</p>
               </div>
             )}
+          </div>
+        )}
+        {activeTab === 'details' && (
+          <div className="flex flex-col h-full font-sans justify-center p-2">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+              <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-center">
+                <div className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Remaining</div>
+                <div className="text-xl font-bold text-zinc-100 mt-1">{totalRemaining}</div>
+              </div>
+              <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-center">
+                <div className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Queued</div>
+                <div className="text-xl font-bold text-zinc-100 mt-1">{totalQueued}</div>
+              </div>
+              <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-center">
+                <div className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Completed</div>
+                <div className="text-xl font-bold text-zinc-100 mt-1">{videosDownloaded}</div>
+              </div>
+              <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-center">
+                <div className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Speed</div>
+                <div className="text-xl font-bold text-emerald-400 mt-1 truncate">{currentSpeed}</div>
+              </div>
+              <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-center col-span-2 sm:col-span-1">
+                <div className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">ETA</div>
+                <div className="text-xl font-bold text-amber-400 mt-1">{avgTime}</div>
+              </div>
+            </div>
           </div>
         )}
       </div>

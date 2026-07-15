@@ -2,36 +2,20 @@
 
 import React, { useState } from 'react';
 import { useAppStore } from '@/store';
-import DuplicateDialog from './duplicate-dialog';
-import { Download, ExternalLink, Copy, Check, RefreshCw, AlertCircle, Music, Image as ImageIcon } from 'lucide-react';
+import { Download, ExternalLink, RefreshCw, AlertCircle, Music, Image as ImageIcon } from 'lucide-react';
 import { InstagramIcon } from './icons';
-
-interface FormatItem {
-  formatId: string;
-  ext: string;
-  resolution: string;
-  note: string;
-  filesize: number | null;
-}
 
 interface MediaMetadata {
   title: string;
   uploader: string;
-  duration: number;
-  views: number;
-  uploadDate: string;
   thumbnail: string;
   webpage_url: string;
-  formats: FormatItem[];
-  subtitles: string[];
 }
 
-// ── Instagram Shimmer Skeleton ──────────────────────────────────────────────
-function InstagramAnalyzingSkeleton() {
+function InstagramImagesAnalyzingSkeleton() {
   return (
-    <div className="rounded-xl border border-pink-500/15 bg-card shadow-xs overflow-hidden divide-y divide-border animate-pulse">
+    <div className="rounded-xl border border-pink-500/10 bg-card shadow-xs overflow-hidden divide-y divide-border animate-pulse">
       <div className="p-5 flex flex-col sm:flex-row gap-5">
-        {/* Aspect square thumbnail skeleton */}
         <div className="relative aspect-square sm:w-40 bg-secondary/60 rounded-lg shrink-0 overflow-hidden border border-border">
           <div
             className="absolute inset-0"
@@ -42,37 +26,16 @@ function InstagramAnalyzingSkeleton() {
             }}
           />
         </div>
-
-        {/* Text skeleton */}
         <div className="flex-1 space-y-4 min-w-0 py-1">
           <div className="space-y-2">
             <div className="h-4 bg-secondary/70 rounded w-4/5" />
             <div className="h-4 bg-secondary/50 rounded w-2/3" />
-            <div className="h-3.5 bg-pink-500/20 rounded w-1/3 mt-2" />
-          </div>
-          <div className="flex gap-3 text-xs">
-            <div className="h-6 bg-secondary/40 rounded w-24" />
-            <div className="h-6 bg-secondary/40 rounded w-28" />
           </div>
         </div>
       </div>
-
-      <div className="p-5 space-y-4">
-        <div className="space-y-2">
-          <div className="h-3 bg-secondary/50 rounded w-24" />
-          <div className="h-9 bg-secondary/40 rounded w-full" />
-        </div>
-        <div className="flex items-center gap-3 pt-2">
-          <div className="h-9 bg-primary/20 rounded w-48" />
-          <div className="h-9 w-9 bg-secondary/40 rounded" />
-          <div className="h-9 w-9 bg-secondary/40 rounded" />
-        </div>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground/70 pt-1">
-          <RefreshCw className="h-3 w-3 animate-spin text-pink-500" />
-          <span>Scraping Instagram post media...</span>
-        </div>
+      <div className="p-5 space-y-3">
+        <div className="h-9 bg-primary/20 rounded w-48" />
       </div>
-
       <style>{`
         @keyframes skeleton-sweep {
           0%   { background-position: -200% 0; }
@@ -83,18 +46,15 @@ function InstagramAnalyzingSkeleton() {
   );
 }
 
-export default function InstagramDownloaderView() {
+export default function InstagramImagesDownloaderView() {
   const { addToQueue, health, connected } = useAppStore();
   const [url, setUrl] = useState('');
   const [analyzing, setAnalyzing] = useState(false);
   const [metadata, setMetadata] = useState<MediaMetadata | null>(null);
-  const [selectedFormat, setSelectedFormat] = useState<string>('best');
   const [error, setError] = useState<string | null>(null);
-  const [copiedTitle, setCopiedTitle] = useState(false);
-  const [duplicateInfo, setDuplicateInfo] = useState<any | null>(null);
-  const [showDuplicateDialog, setShowDuplicateDialog] = useState(false);
-
-  // Audio options
+  const [selectedFormat, setSelectedFormat] = useState('best');
+  
+  // Audio embedding checkboxes
   const [embedMetadata, setEmbedMetadata] = useState(true);
   const [embedThumbnail, setEmbedThumbnail] = useState(true);
 
@@ -116,86 +76,32 @@ export default function InstagramDownloaderView() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to analyze Instagram link. Make sure link is public.');
+        throw new Error(errorData.error || 'Failed to extract Instagram link details. Make sure it is public.');
       }
 
       const data = await res.json();
       setMetadata(data.metadata);
-      setSelectedFormat('best');
     } catch (e: any) {
-      setError(e?.message || 'Failed to extract Instagram media. yt-dlp requires public profiles for Instagram scraping.');
+      setError(e?.message || 'Failed to extract Instagram details.');
     } finally {
       setAnalyzing(false);
     }
   };
 
-  const handleCopyTitle = () => {
+  const handleDownload = async () => {
     if (!metadata) return;
-    navigator.clipboard.writeText(metadata.title);
-    setCopiedTitle(true);
-    setTimeout(() => setCopiedTitle(false), 2000);
-  };
-
-  const checkAndDownload = async () => {
-    if (!metadata) return;
-
-    try {
-      const res = await fetch('http://localhost:3001/duplicate-check', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: metadata.title, url: metadata.webpage_url })
-      });
-      const data = await res.json();
-
-      if (data.duplicate) {
-        setDuplicateInfo(data.record);
-        setShowDuplicateDialog(true);
-      } else {
-        triggerDownload();
-      }
-    } catch (e) {
-      console.error(e);
-      triggerDownload();
-    }
-  };
-
-  const triggerDownload = async (duplicateAction?: string, customRename?: string) => {
-    if (!metadata) return;
-
     await addToQueue(metadata.webpage_url, selectedFormat, 'instagram', embedMetadata, embedThumbnail);
-    
-    // Do NOT reset url or metadata so the user keeps context
-    setShowDuplicateDialog(false);
-    setDuplicateInfo(null);
-  };
-
-  const handleDuplicateResolve = (action: 'skip' | 'download_anyway' | 'rename' | 'overwrite', renameVal?: string) => {
-    if (action === 'skip') {
-      setShowDuplicateDialog(false);
-      setDuplicateInfo(null);
-      return;
-    }
-    triggerDownload(action, renameVal);
-  };
-
-  const formatDuration = (secs: number) => {
-    if (!secs) return '';
-    const m = Math.floor(secs / 60);
-    const s = secs % 60;
-    return `${m}:${String(s).padStart(2, '0')}`;
   };
 
   const isInternetDisconnected = connected && health && !health.internetAvailable;
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
-      {/* Title */}
       <div>
-        <h2 className="text-xl font-bold tracking-tight">Instagram Downloader</h2>
-        <p className="text-sm text-muted-foreground">Download Instagram Reels, carousel posts, videos, or stories from public accounts.</p>
+        <h2 className="text-xl font-bold tracking-tight">Instagram Images Downloader</h2>
+        <p className="text-sm text-muted-foreground">Download carousel posts, pictures, or stories from public Instagram profiles.</p>
       </div>
 
-      {/* URL Input Form */}
       <div className="rounded-xl border border-pink-500/10 bg-card p-5 shadow-xs space-y-4">
         <form onSubmit={handleAnalyze} className="flex gap-2">
           <div className="relative flex-1">
@@ -203,7 +109,7 @@ export default function InstagramDownloaderView() {
               type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="Paste Instagram Reel or Post link here..."
+              placeholder="Paste Instagram image or carousel link here..."
               className="w-full rounded-md border border-border bg-background pl-3 pr-10 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-pink-500 focus:border-pink-500"
               disabled={analyzing}
             />
@@ -220,7 +126,7 @@ export default function InstagramDownloaderView() {
                 Scraping...
               </>
             ) : (
-              'Analyze Link'
+              'Analyze'
             )}
           </button>
         </form>
@@ -228,7 +134,7 @@ export default function InstagramDownloaderView() {
         {isInternetDisconnected && (
           <div className="flex items-center gap-2 text-xs text-yellow-600 dark:text-yellow-400 bg-yellow-500/10 p-3 rounded-lg border border-yellow-500/20">
             <AlertCircle className="h-4 w-4" />
-            <span>Internet connectivity check failed. Downloads are disabled.</span>
+            <span>Internet check failed. Downloads are disabled.</span>
           </div>
         )}
 
@@ -240,68 +146,41 @@ export default function InstagramDownloaderView() {
         )}
       </div>
 
-      {/* Shimmer loading skeleton */}
-      {analyzing && <InstagramAnalyzingSkeleton />}
+      {analyzing && <InstagramImagesAnalyzingSkeleton />}
 
-      {/* Instagram Media Preview Card */}
       {metadata && (
         <div className="rounded-xl border border-pink-500/15 bg-card shadow-xs overflow-hidden divide-y divide-border">
-          {/* Main info row */}
           <div className="p-5 flex flex-col sm:flex-row gap-5">
-            {/* Thumbnail */}
-            <div className="relative aspect-square sm:w-40 bg-secondary rounded-lg overflow-hidden shrink-0 shadow-xs border border-border">
+            <div className="relative aspect-square sm:w-40 bg-secondary rounded-lg overflow-hidden shrink-0 border border-border">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={metadata.thumbnail || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=300'}
                 alt="thumbnail"
                 className="object-cover w-full h-full"
               />
-              {metadata.duration > 0 && (
-                <span className="absolute bottom-1.5 right-1.5 bg-black/85 text-[10px] text-white px-1.5 py-0.5 rounded font-mono">
-                  {formatDuration(metadata.duration)}
-                </span>
-              )}
             </div>
 
-            {/* Title / Info */}
-            <div className="flex-1 space-y-3.5 min-w-0">
+            <div className="flex-1 space-y-3 min-w-0">
               <div className="space-y-1">
-                <h3 className="font-semibold text-base text-foreground leading-snug line-clamp-3">{metadata.title || 'Instagram Post'}</h3>
+                <h3 className="font-semibold text-base text-foreground leading-snug line-clamp-3">{metadata.title || 'Instagram Carousel / Image Post'}</h3>
                 <p className="text-xs text-pink-500 font-semibold">Account: @{metadata.uploader || 'Instagram User'}</p>
-              </div>
-
-              <div className="text-xs text-muted-foreground flex gap-3">
-                <span className="bg-secondary/60 rounded px-2.5 py-1">
-                  Type: <strong className="text-foreground">Reel/Post</strong>
-                </span>
-                {metadata.duration > 0 && (
-                  <span className="bg-secondary/60 rounded px-2.5 py-1">
-                    Duration: <strong className="text-foreground">{formatDuration(metadata.duration)}</strong>
-                  </span>
-                )}
               </div>
             </div>
           </div>
 
-          {/* Download options */}
           <div className="p-5 space-y-4">
             <div className="space-y-2">
-              <label htmlFor="ig-format" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Format</label>
+              <label htmlFor="img-format-select" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Format</label>
               <select
-                id="ig-format"
+                id="img-format-select"
                 value={selectedFormat}
                 onChange={(e) => setSelectedFormat(e.target.value)}
                 className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-pink-500"
               >
-                <optgroup label="Video">
-                  <option value="best">Best Quality (Default)</option>
-                  <option value="mp4_2160p">MP4 4K (2160p)</option>
-                  <option value="mp4_1440p">MP4 2K (1440p)</option>
-                  <option value="mp4_1080p">MP4 1080p</option>
-                  <option value="mp4_720p">MP4 720p</option>
-                  <option value="mp4_480p">MP4 480p</option>
+                <optgroup label="Images">
+                  <option value="best">Default Images Download (best)</option>
                 </optgroup>
-                <optgroup label="Audio">
+                <optgroup label="Audio (Extraction)">
                   <option value="mp3_320">MP3 320kbps (Best)</option>
                   <option value="mp3_128">MP3 128kbps (Standard)</option>
                   <option value="m4a">M4A (AAC Audio)</option>
@@ -310,11 +189,9 @@ export default function InstagramDownloaderView() {
               </select>
             </div>
 
-            {/* Audio embedding options — shown only for audio formats */}
             {isAudioFormat && (
               <div className="flex flex-wrap items-center gap-4 px-3 py-2.5 rounded-lg border border-border bg-secondary/20 text-xs">
                 <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px] shrink-0">Embed into file:</span>
-
                 <label className="flex items-center gap-2 cursor-pointer select-none group">
                   <input
                     type="checkbox"
@@ -323,12 +200,8 @@ export default function InstagramDownloaderView() {
                     className="peer h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary focus:ring-offset-0 cursor-pointer"
                   />
                   <Music className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
-                  <span className="text-foreground/80 group-hover:text-foreground transition-colors">
-                    Metadata
-                    <span className="text-muted-foreground ml-1">(title, artist…)</span>
-                  </span>
+                  <span className="text-foreground/80 group-hover:text-foreground transition-colors">Metadata</span>
                 </label>
-
                 <label className="flex items-center gap-2 cursor-pointer select-none group">
                   <input
                     type="checkbox"
@@ -337,30 +210,19 @@ export default function InstagramDownloaderView() {
                     className="peer h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary focus:ring-offset-0 cursor-pointer"
                   />
                   <ImageIcon className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
-                  <span className="text-foreground/80 group-hover:text-foreground transition-colors">
-                    Thumbnail
-                    <span className="text-muted-foreground ml-1">(cover art as JPG)</span>
-                  </span>
+                  <span className="text-foreground/80 group-hover:text-foreground transition-colors">Thumbnail</span>
                 </label>
               </div>
             )}
 
             <div className="flex items-center gap-2 pt-2">
               <button
-                onClick={checkAndDownload}
+                onClick={handleDownload}
                 disabled={!!isInternetDisconnected}
                 className="flex items-center gap-2 rounded-md bg-gradient-to-r from-pink-500 to-violet-600 text-white px-4 py-2 text-sm font-semibold hover:opacity-95 shadow-xs disabled:opacity-40 transition-opacity"
               >
                 <Download className="h-4 w-4" />
                 Add to Download Queue
-              </button>
-
-              <button
-                onClick={handleCopyTitle}
-                className="flex items-center justify-center h-9 w-9 rounded-md border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-                title="Copy caption text"
-              >
-                {copiedTitle ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
               </button>
 
               <a
@@ -376,18 +238,6 @@ export default function InstagramDownloaderView() {
           </div>
         </div>
       )}
-
-      {/* Duplicate Dialog */}
-      <DuplicateDialog
-        isOpen={showDuplicateDialog}
-        title={metadata?.title || ''}
-        duplicateInfo={duplicateInfo}
-        onResolve={handleDuplicateResolve}
-        onClose={() => {
-          setShowDuplicateDialog(false);
-          setDuplicateInfo(null);
-        }}
-      />
     </div>
   );
 }

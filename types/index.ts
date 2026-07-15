@@ -70,6 +70,9 @@ export interface QueueItem {
   fileName: string;
   downloadPath: string;
   format: string;
+  embedMetadata?: boolean;
+  embedThumbnail?: boolean;
+  subLangs?: string[];
   error?: string;
   logs: string[];
   addedAt: string;

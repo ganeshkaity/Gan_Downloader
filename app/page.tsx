@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useAppStore } from '@/store';
 import Layout from '@/components/layout';
 import DashboardView from '@/components/dashboard-view';
@@ -8,6 +8,12 @@ import SingleDownloaderView from '@/components/single-downloader-view';
 import PlaylistDownloaderView from '@/components/playlist-downloader-view';
 import MultipleDownloaderView from '@/components/multiple-downloader-view';
 import InstagramDownloaderView from '@/components/instagram-downloader-view';
+import InstagramImagesDownloaderView from '@/components/instagram-images-downloader-view';
+import ThumbnailDownloaderView from '@/components/thumbnail-downloader-view';
+import SubtitleDownloaderView from '@/components/subtitle-downloader-view';
+import YTSearchDownloaderView from '@/components/yt-search-downloader-view';
+import YTShortsDownloaderView from '@/components/yt-shorts-downloader-view';
+import SongListDownloaderView from '@/components/song-list-downloader-view';
 import HistoryView from '@/components/history-view';
 import SettingsView from '@/components/settings-view';
 import ConsolePanel from '@/components/console-panel';
@@ -15,6 +21,19 @@ import { Terminal, ChevronUp, ChevronDown } from 'lucide-react';
 
 export default function Home() {
   const { activeView, consoleOpen, setConsoleOpen } = useAppStore();
+  const consoleRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (consoleOpen && consoleRef.current && !consoleRef.current.contains(e.target as Node)) {
+        setConsoleOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [consoleOpen, setConsoleOpen]);
 
   const renderActiveView = () => {
     switch (activeView) {
@@ -22,12 +41,24 @@ export default function Home() {
         return <DashboardView />;
       case 'single':
         return <SingleDownloaderView />;
+      case 'yt_shorts':
+        return <YTShortsDownloaderView />;
       case 'playlist':
         return <PlaylistDownloaderView />;
       case 'multiple':
         return <MultipleDownloaderView />;
       case 'instagram':
         return <InstagramDownloaderView />;
+      case 'insta_images':
+        return <InstagramImagesDownloaderView />;
+      case 'thumbnail':
+        return <ThumbnailDownloaderView />;
+      case 'subtitle':
+        return <SubtitleDownloaderView />;
+      case 'yt_search':
+        return <YTSearchDownloaderView />;
+      case 'song_list':
+        return <SongListDownloaderView />;
       case 'history':
         return <HistoryView />;
       case 'settings':
@@ -47,7 +78,9 @@ export default function Home() {
         </div>
 
         {/* Collapsible Bottom Console Terminal Drawer */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-zinc-950 border-t border-border shadow-2xl transition-all duration-200"
+        <div 
+             ref={consoleRef}
+             className="fixed bottom-0 left-0 right-0 z-40 bg-zinc-950 border-t border-border shadow-2xl transition-all duration-200"
              style={{ height: consoleOpen ? '320px' : '36px' }}
         >
           {/* Drawer Header/Toggle Button */}

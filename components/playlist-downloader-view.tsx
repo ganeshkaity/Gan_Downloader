@@ -14,8 +14,116 @@ import {
   RefreshCw, 
   AlertCircle,
   LayoutGrid,
-  LayoutList
+  LayoutList,
+  Music,
+  Image
 } from 'lucide-react';
+
+// ── Skeleton loader shown while playlist is being analyzed ────────────────────
+function PlaylistAnalyzingSkeleton() {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-pulse">
+
+      {/* Left panel skeleton */}
+      <div className="col-span-1">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* Cover */}
+          <div className="relative aspect-video w-full rounded-lg bg-secondary/60 overflow-hidden border border-border">
+            <div
+              className="absolute inset-0"
+              style={{
+                background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%)',
+                backgroundSize: '200% 100%',
+                animation: 'skeleton-sweep 1.6s ease-in-out infinite',
+              }}
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <ListMusic className="h-10 w-10 text-muted-foreground/20" />
+            </div>
+          </div>
+
+          {/* Title / uploader */}
+          <div className="space-y-2">
+            <div className="h-4 bg-secondary/70 rounded w-4/5" />
+            <div className="h-3 bg-secondary/50 rounded w-2/5" />
+          </div>
+
+          {/* Stats */}
+          <div className="border-t border-border/60 pt-3 space-y-2.5">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="flex justify-between">
+                <div className="h-3 bg-secondary/50 rounded w-1/3" />
+                <div className="h-3 bg-secondary/40 rounded w-1/4" />
+              </div>
+            ))}
+          </div>
+
+          {/* Download button ghost */}
+          <div className="h-9 rounded-md bg-primary/20 w-full" />
+        </div>
+      </div>
+
+      {/* Right panel skeleton */}
+      <div className="col-span-1 lg:col-span-2 space-y-4">
+        {/* Toolbar ghost */}
+        <div className="border border-border bg-card rounded-lg shadow-xs divide-y divide-border/60">
+          <div className="flex items-center gap-4 px-3 py-2.5">
+            <div className="h-7 bg-secondary/50 rounded w-36" />
+            <div className="h-7 bg-secondary/40 rounded w-32" />
+            <div className="h-7 bg-secondary/40 rounded w-28" />
+          </div>
+          <div className="flex items-center gap-4 px-3 py-2.5">
+            <div className="h-5 bg-secondary/50 rounded w-24" />
+            <div className="h-5 bg-secondary/40 rounded w-32" />
+            <div className="ml-auto h-7 bg-secondary/40 rounded w-16" />
+          </div>
+        </div>
+
+        {/* Track card ghosts — 2 columns × 4 rows */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="relative flex items-center gap-3 rounded-lg border border-border bg-card p-2 overflow-hidden"
+              style={{ opacity: 1 - i * 0.08 }}
+            >
+              {/* Sweep shimmer */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%)',
+                  backgroundSize: '200% 100%',
+                  animation: `skeleton-sweep 1.6s ease-in-out ${i * 0.1}s infinite`,
+                }}
+              />
+              {/* Thumb */}
+              <div className="h-16 w-24 shrink-0 rounded bg-secondary/60" />
+              {/* Lines */}
+              <div className="flex-1 space-y-2 pr-5">
+                <div className="h-3 bg-secondary/70 rounded w-4/5" />
+                <div className="h-2.5 bg-secondary/50 rounded w-2/3" />
+                <div className="h-2.5 bg-secondary/40 rounded w-1/3" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Status label */}
+        <div className="flex items-center gap-2 text-xs text-muted-foreground/70 pl-1">
+          <RefreshCw className="h-3 w-3 animate-spin" />
+          <span>Fetching playlist entries… this may take a moment for large playlists.</span>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes skeleton-sweep {
+          0%   { background-position: -200% 0; }
+          100% { background-position:  200% 0; }
+        }
+      `}</style>
+    </div>
+  );
+}
 
 interface PlaylistEntry {
   id: string;
@@ -48,9 +156,15 @@ export default function PlaylistDownloaderView() {
   const [rangeStart, setRangeStart] = useState('');
   const [rangeEnd, setRangeEnd] = useState('');
   const [visibleCount, setVisibleCount] = useState(100);
+
+  // Audio embedding options
+  const [embedMetadata, setEmbedMetadata] = useState(true);
+  const [embedThumbnail, setEmbedThumbnail] = useState(true);
   
   // Track specific overrides
   const [entries, setEntries] = useState<PlaylistEntry[]>([]);
+
+  const isAudioFormat = ['mp3_320', 'mp3_128', 'm4a', 'wav'].includes(globalFormat);
 
   const handleAnalyze = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,10 +232,18 @@ export default function PlaylistDownloaderView() {
     }));
   };
 
-  // Toggle Select All
+  // Toggle Select All (only for currently visible/loaded items)
   const toggleSelectAll = () => {
-    const allSelected = entries.every(e => e.selected);
-    setEntries(entries.map(e => ({ ...e, selected: !allSelected })));
+    const visibleEntries = filteredEntries.slice(0, visibleCount);
+    const allVisibleSelected = visibleEntries.length > 0 && visibleEntries.every(e => e.selected);
+    const visibleIds = new Set(visibleEntries.map(e => e.id));
+    
+    setEntries(entries.map(e => {
+      if (visibleIds.has(e.id)) {
+        return { ...e, selected: !allVisibleSelected };
+      }
+      return e; // Keep non-visible entries as they are
+    }));
   };
 
   // Apply format to all selected
@@ -226,6 +348,9 @@ export default function PlaylistDownloaderView() {
         )}
       </div>
 
+      {/* Skeleton loader while analyzing */}
+      {analyzing && <PlaylistAnalyzingSkeleton />}
+
       {playlist && entries.length > 0 && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
@@ -269,54 +394,13 @@ export default function PlaylistDownloaderView() {
 
           {/* Right panel: Filter and Track cards */}
           <div className="col-span-1 lg:col-span-2 space-y-4">
-            {/* Configuration bar */}
-            <div className="flex flex-col xl:flex-row xl:items-center gap-4 border border-border bg-card p-3 rounded-lg shadow-xs text-xs text-muted-foreground">
-              <div className="flex items-center gap-3 shrink-0">
-                <label className="flex items-center gap-2 cursor-pointer font-semibold text-foreground hover:text-primary transition-colors shrink-0">
-                  <input 
-                    type="checkbox" 
-                    checked={entries.length > 0 && entries.every(e => e.selected)}
-                    onChange={toggleSelectAll}
-                    className="rounded border-zinc-700 bg-zinc-900 text-primary focus:ring-primary focus:ring-offset-zinc-950 h-3.5 w-3.5 cursor-pointer"
-                  />
-                  Select all
-                </label>
+            {/* Configuration bar — 2 rows */}
+            <div className="border border-border bg-card rounded-lg shadow-xs text-xs text-muted-foreground divide-y divide-border/60">
 
-                {/* Range Select */}
-                <div className="flex items-center gap-1 border-l border-zinc-800 pl-3">
-                  <span>Range:</span>
-                  <input 
-                    type="number"
-                    placeholder="Min"
-                    value={rangeStart}
-                    onChange={(e) => setRangeStart(e.target.value)}
-                    className="w-12 bg-background border border-border text-foreground rounded px-1.5 py-0.5 text-center text-[10px] focus:outline-none focus:ring-1 focus:ring-primary"
-                    min={1}
-                    max={entries.length}
-                  />
-                  <span>to</span>
-                  <input 
-                    type="number"
-                    placeholder="Max"
-                    value={rangeEnd}
-                    onChange={(e) => setRangeEnd(e.target.value)}
-                    className="w-12 bg-background border border-border text-foreground rounded px-1.5 py-0.5 text-center text-[10px] focus:outline-none focus:ring-1 focus:ring-primary"
-                    min={1}
-                    max={entries.length}
-                  />
-                  <button
-                    type="button"
-                    onClick={applyRangeSelection}
-                    className="px-2 py-0.5 bg-primary/20 text-primary hover:bg-primary/30 rounded text-[10px] font-semibold transition-colors ml-1"
-                  >
-                    Apply
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-4 flex-1">
+              {/* ── Row 1: Format / Audio / Subtitles ── */}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-3 py-2.5">
                 <div className="flex items-center gap-2">
-                  <label>Default format:</label>
+                  <label className="shrink-0">Default format:</label>
                   <select 
                     value={globalFormat}
                     onChange={(e) => applyGlobalFormat(e.target.value)}
@@ -340,7 +424,7 @@ export default function PlaylistDownloaderView() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <label>Audio track:</label>
+                  <label className="shrink-0">Audio track:</label>
                   <select
                     value={globalAudio}
                     onChange={(e) => setGlobalAudio(e.target.value)}
@@ -352,7 +436,7 @@ export default function PlaylistDownloaderView() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <label>Subtitles:</label>
+                  <label className="shrink-0">Subtitles:</label>
                   <select
                     value={globalSubtitles}
                     onChange={(e) => setGlobalSubtitles(e.target.value)}
@@ -364,23 +448,110 @@ export default function PlaylistDownloaderView() {
                   </select>
                 </div>
               </div>
-              
-              <div className="flex items-center border border-border rounded overflow-hidden shrink-0">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-1.5 transition-colors ${viewMode === 'grid' ? 'bg-primary/20 text-primary' : 'bg-background hover:bg-secondary'}`}
-                  title="Grid View"
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-1.5 transition-colors ${viewMode === 'list' ? 'bg-primary/20 text-primary' : 'bg-background hover:bg-secondary'}`}
-                  title="List View"
-                >
-                  <LayoutList className="h-4 w-4" />
-                </button>
+
+              {/* ── Row 1b: Embed options — only for audio formats ── */}
+              {isAudioFormat && (
+                <div className="flex flex-wrap items-center gap-4 px-3 py-2.5 bg-secondary/10">
+                  <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px] shrink-0">Embed into file:</span>
+
+                  <label className="flex items-center gap-2 cursor-pointer select-none group">
+                    <input
+                      type="checkbox"
+                      checked={embedMetadata}
+                      onChange={(e) => setEmbedMetadata(e.target.checked)}
+                      className="h-3.5 w-3.5 rounded border-border bg-background text-primary focus:ring-primary focus:ring-offset-0 cursor-pointer"
+                    />
+                    <Music className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                    <span className="text-foreground/80 group-hover:text-foreground transition-colors">
+                      Metadata
+                      <span className="text-muted-foreground ml-1">(title, artist, album…)</span>
+                    </span>
+                  </label>
+
+                  <label className="flex items-center gap-2 cursor-pointer select-none group">
+                    <input
+                      type="checkbox"
+                      checked={embedThumbnail}
+                      onChange={(e) => setEmbedThumbnail(e.target.checked)}
+                      className="h-3.5 w-3.5 rounded border-border bg-background text-primary focus:ring-primary focus:ring-offset-0 cursor-pointer"
+                    />
+                    <Image className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                    <span className="text-foreground/80 group-hover:text-foreground transition-colors">
+                      Thumbnail
+                      <span className="text-muted-foreground ml-1">(cover art as JPG)</span>
+                    </span>
+                  </label>
+                </div>
+              )}
+
+              {/* ── Row 2: Select All / Range / View Toggle ── */}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-3 py-2.5">
+                {/* Select All */}
+                <label className="flex items-center gap-2 cursor-pointer font-semibold text-foreground hover:text-primary transition-colors shrink-0">
+                  <input 
+                    type="checkbox" 
+                    checked={filteredEntries.slice(0, visibleCount).length > 0 && filteredEntries.slice(0, visibleCount).every(e => e.selected)}
+                    onChange={toggleSelectAll}
+                    className="rounded border-zinc-700 bg-zinc-900 text-primary focus:ring-primary focus:ring-offset-zinc-950 h-3.5 w-3.5 cursor-pointer"
+                  />
+                  Select all
+                </label>
+
+                {/* Range Select */}
+                <div className="flex items-center gap-1.5 border-l border-border pl-4">
+                  <span>Range:</span>
+                  <input 
+                    type="number"
+                    placeholder="Min"
+                    value={rangeStart}
+                    onChange={(e) => setRangeStart(e.target.value)}
+                    className="w-12 bg-background border border-border text-foreground rounded px-1.5 py-0.5 text-center text-[10px] focus:outline-none focus:ring-1 focus:ring-primary"
+                    min={1}
+                    max={entries.length}
+                  />
+                  <span>to</span>
+                  <input 
+                    type="number"
+                    placeholder="Max"
+                    value={rangeEnd}
+                    onChange={(e) => setRangeEnd(e.target.value)}
+                    className="w-12 bg-background border border-border text-foreground rounded px-1.5 py-0.5 text-center text-[10px] focus:outline-none focus:ring-1 focus:ring-primary"
+                    min={1}
+                    max={entries.length}
+                  />
+                  <button
+                    type="button"
+                    onClick={applyRangeSelection}
+                    className="px-2 py-0.5 bg-primary/20 text-primary hover:bg-primary/30 rounded text-[10px] font-semibold transition-colors"
+                  >
+                    Apply
+                  </button>
+                </div>
+
+                {/* Selection count badge */}
+                <span className="text-[10px] text-muted-foreground border-l border-border pl-4">
+                  <span className="font-semibold text-foreground">{entries.filter(e => e.selected).length}</span> / {entries.length} selected
+                </span>
+
+                {/* View Toggle — pushed to end */}
+                <div className="ml-auto flex items-center border border-border rounded overflow-hidden shrink-0">
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`p-1.5 transition-colors ${viewMode === 'grid' ? 'bg-primary/20 text-primary' : 'bg-background hover:bg-secondary'}`}
+                    title="Grid View"
+                  >
+                    <LayoutGrid className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`p-1.5 transition-colors ${viewMode === 'list' ? 'bg-primary/20 text-primary' : 'bg-background hover:bg-secondary'}`}
+                    title="List View"
+                  >
+                    <LayoutList className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
+
             </div>
 
             {/* Virtualized/Scroll track cards container */}
